@@ -5,6 +5,7 @@ namespace App\Services\MediaService;
 use App\Exceptions\MediaServiceException;
 use App\Services\DataSource\ExternalApiDataSourceInterface;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 
 class MediaService implements MediaServiceInterface
 {
@@ -26,16 +27,31 @@ class MediaService implements MediaServiceInterface
 
             $offset = ($page % 2 === 1) ? 0 : $per_page;
             //page number to be used by TMDB api
+            $tmdb_page = (int)floor($page / 2) + 1;
             $params['page'] = (int)floor($page / 2) + 1;
 
-            $data = $this->dataSource->getData('discover', $mediaType, null, $params);
+            //empty cache
+            if (Cache::missing('paginated_data')) {
+                $data = $this->dataSource->getData('discover', $mediaType, null, $params);
+                Cache::put('paginated_data', ["page" => $data, 'tmdb_page' => $tmdb_page], 60);
+
+            // page changed (page to request from TMDB)
+            } elseif (filled($cached_page_num = Cache::get('paginated_data')['tmdb_page']) &&
+                ($cached_page_num !== $tmdb_page)) {
+
+                $data = $this->dataSource->getData('discover', $mediaType, null, $params);
+                Cache::put('paginated_data', ["page" => $data, 'tmdb_page' => $tmdb_page], 60);
+
+            //load data from cache
+            } else {
+                $data = Cache::get('paginated_data')['page'];
+            }
 
             $data->page = $page;
             $data->total_pages = (int)ceil($data->total_results / $per_page);
             $data->results = array_slice($data->results, $offset, $per_page);
 
             return $data;
-
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -94,4 +110,5 @@ class MediaService implements MediaServiceInterface
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
+
 }
