@@ -69,6 +69,6 @@ class MediaService implements MediaServiceInterface
      */
     public function videos(string $mediaType, array $ids, array $params): object
     {
-        return $this->dataSource->getData('top_rated', $mediaType, $ids, $params);
+        return $this->dataSource->getData('videos', $mediaType, $ids, $params);
     }
 }
