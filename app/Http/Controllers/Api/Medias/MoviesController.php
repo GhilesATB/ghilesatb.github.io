@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Media;
+namespace App\Http\Controllers\Api\Medias;
 
 use App\Http\Controllers\Controller;
 use App\Services\MediaService\MediaService;

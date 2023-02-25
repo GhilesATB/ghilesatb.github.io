@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Accounts;
+namespace App\Http\Controllers\Api\Account;
 use App\Http\Controllers\Controller;
 use App\Services\AccountService\AccountService;
 use Illuminate\Http\Response;

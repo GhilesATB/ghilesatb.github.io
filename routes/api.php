@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\Accounts\FavoritesController;
+use App\Http\Controllers\Api\Account\FavoritesController;
 use App\Http\Controllers\Api\Authentication\AuthController;
-use App\Http\Controllers\Api\Media\MoviesController;
-use App\Http\Controllers\Api\Media\SeriesController;
+use App\Http\Controllers\Api\Medias\MoviesController;
+use App\Http\Controllers\Api\Medias\SeriesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +17,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+/*
+ * Authentication routes
+ */
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+
 /*
  * movie routes
  */
@@ -28,12 +35,6 @@ Route::prefix('/movies')->group(function () {
     Route::get('/search', [MoviesController::class, 'search']);
 });
 
-/*
- * Authentication routes
- */
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
-
 Route::prefix('/tv')->group(function () {
     Route::get('/', [SeriesController::class, 'index']);
     Route::get('/top-rated', [SeriesController::class, 'topRated']);
@@ -43,7 +44,15 @@ Route::prefix('/tv')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/account/favorites', [FavoritesController::class, 'index']);
-    Route::post('/account/mark-as-favorite/{favorite_id}', [FavoritesController::class, 'store']);
-    Route::delete('/account/delete-favorite/{favorite_id}', [FavoritesController::class, 'destroy']);
+    /*
+     * account routes
+     */
+    Route::prefix('/account')->group(function () {
+        /*
+         * favorites routes
+         */
+        Route::get('/favorites', [FavoritesController::class, 'index']);
+        Route::post('/mark-as-favorite/{favorite_id}', [FavoritesController::class, 'store']);
+        Route::delete('/delete-favorite/{favorite_id}', [FavoritesController::class, 'destroy']);
+    });
 });
