@@ -16,13 +16,13 @@ class AccountService implements AccountServiceInterface
     /*
      * media data
      */
-    public function getMedia(string $mediaType, array $ids, $params): Favorite
+    public function getMedia(string $mediaType, string $id, $params): Favorite
     {
         $favorite = Favorite::where('media_id', request()->input('media_id'))->first();
 
         if (blank($favorite)) {
             $data = $this->mediaService->detail(
-                $mediaType, $ids, $params
+                $mediaType, $id, $params
             );
 
             $favoriteData = [

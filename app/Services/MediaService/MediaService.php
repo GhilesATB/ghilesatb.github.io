@@ -35,14 +35,14 @@ class MediaService implements MediaServiceInterface
                 $data = $this->dataSource->getData('discover', $mediaType, null, $params);
                 Cache::put('paginated_data', ["page" => $data, 'tmdb_page' => $tmdb_page], 60);
 
-            // page changed (page to request from TMDB)
+                // page changed (page to request from TMDB)
             } elseif (filled($cached_page_num = Cache::get('paginated_data')['tmdb_page']) &&
                 ($cached_page_num !== $tmdb_page)) {
 
                 $data = $this->dataSource->getData('discover', $mediaType, null, $params);
                 Cache::put('paginated_data', ["page" => $data, 'tmdb_page' => $tmdb_page], 60);
 
-            //load data from cache
+                //load data from cache
             } else {
                 $data = Cache::get('paginated_data')['page'];
             }
@@ -90,10 +90,10 @@ class MediaService implements MediaServiceInterface
     /*
      * get media detail
      */
-    public function detail(string $mediaType, array $ids, array $params): object
+    public function detail(string $mediaType, string $id, array $params): object
     {
         try {
-            return $this->dataSource->getData('detail', $mediaType, $ids, $params);
+            return $this->dataSource->getData('detail', $mediaType, $id, $params);
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -102,13 +102,12 @@ class MediaService implements MediaServiceInterface
     /*
      * get media videos
      */
-    public function videos(string $mediaType, array $ids, array $params): object
+    public function videos(string $mediaType, string $id, array $params): object
     {
         try {
-            return $this->dataSource->getData('videos', $mediaType, $ids, $params);
+            return $this->dataSource->getData('videos', $mediaType, $id, $params);
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
-
 }

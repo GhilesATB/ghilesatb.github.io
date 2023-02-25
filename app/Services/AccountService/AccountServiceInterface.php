@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
  */
 interface AccountServiceInterface
 {
-    public function getMedia(string $mediaType, array $ids, $params): Favorite;
+    public function getMedia(string $mediaType, string $id, $params): Favorite;
 
     public function getFavorites(): Collection;
 

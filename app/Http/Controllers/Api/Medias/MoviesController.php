@@ -34,14 +34,14 @@ class MoviesController extends Controller
 
     public function detail(string $id, MediaService $service): JsonResponse
     {
-        $slice = $service->detail(self::MEDIA, [self::MEDIA => $id], request()->query->all());
+        $slice = $service->detail(self::MEDIA, $id, request()->query->all());
 
         return response()->json($slice, Response::HTTP_OK);
     }
 
     public function videos(string $id, MediaService $service): JsonResponse
     {
-        $slice = $service->videos(self::MEDIA, [self::MEDIA => $id], request()->query->all());
+        $slice = $service->videos(self::MEDIA, $id, request()->query->all());
 
         return response()->json($slice, Response::HTTP_OK);
     }
