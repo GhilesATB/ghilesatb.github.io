@@ -4,7 +4,7 @@ namespace App\Services\DataSource;
 
 use App\Exceptions\DataSourceException;
 use Illuminate\Support\Facades\Http;
-
+use Exception;
 class MediaDataSource implements ExternalApiDataSourceInterface
 {
     public function __construct(private readonly string $base_url)
@@ -33,7 +33,7 @@ class MediaDataSource implements ExternalApiDataSourceInterface
             $data = json_decode($response->body());
 
             return $data;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new DataSourceException($e->getMessage(), $e->getCode(), $e);
         }
     }
