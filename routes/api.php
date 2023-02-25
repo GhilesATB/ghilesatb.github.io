@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\Accounts\FavoritesController;
 use App\Http\Controllers\Api\Authentication\AuthController;
 use App\Http\Controllers\Api\Media\MoviesController;
 use App\Http\Controllers\Api\Media\SeriesController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,6 +42,8 @@ Route::prefix('/tv')->group(function () {
     Route::get('/search', [SeriesController::class, 'search']);
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/account/favorites', [FavoritesController::class, 'index']);
+    Route::post('/account/mark-as-favorite/{favorite_id}', [FavoritesController::class, 'store']);
+    Route::delete('/account/delete-favorite/{favorite_id}', [FavoritesController::class, 'destroy']);
 });

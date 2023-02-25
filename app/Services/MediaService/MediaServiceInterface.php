@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\MediaService;
 
+/*
+ * interfaces to be implemented for Media services
+ */
 interface MediaServiceInterface
 {
     public function getPage(string $mediaType, array $params): object;

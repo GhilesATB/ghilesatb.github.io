@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\MediaService;
 
 use App\Services\DataSource\ExternalApiDataSourceInterface;
 

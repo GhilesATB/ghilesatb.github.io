@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Media;
 
 use App\Http\Controllers\Controller;
-use App\Services\MediaService;
+use App\Services\MediaService\MediaService;
 use Illuminate\Http\Response;
 
 class MoviesController extends Controller

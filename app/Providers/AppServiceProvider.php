@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Services\DataSource\ExternalApiDataSourceInterface;
 use App\Services\DataSource\MediaDataSource;
-use App\Services\MediaService;
-use App\Services\MediaServiceInterface;
+use App\Services\MediaService\MediaService;
+use App\Services\MediaService\MediaServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
