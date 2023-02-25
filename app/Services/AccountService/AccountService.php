@@ -35,6 +35,7 @@ class AccountService implements AccountServiceInterface
                 'poster_path' => $data->poster_path,
                 'release_date' => $data->release_date,
             ];
+
             $favorite = Favorite::create($favoriteData);
         }
         return $favorite;
