@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Services\MediaService;
 use Illuminate\Http\Response;
 
-class MediasController extends Controller
+class MoviesController extends Controller
 {
-    public function index(MediaService $MoviesService)
+    public function index(MediaService $movieService)
     {
-        $data = $MoviesService->getPage('movie', request()->query->all());
+        $data = $movieService->getPage('movie', request()->query->all());
 
         return response()->json($data, Response::HTTP_OK);
     }
