@@ -10,35 +10,35 @@ class SeriesController extends Controller
 {
     public function index(MediaService $mediaService)
     {
-        $data = $mediaService->getPage('movie', request()->query->all());
+        $data = $mediaService->getPage('tv', request()->query->all());
 
         return response()->json($data, Response::HTTP_OK);
     }
 
     public function topRated(MediaService $service)
     {
-        $slice = $service->getTopRated('movie', request()->query->all());
+        $slice = $service->getTopRated('tv', request()->query->all());
 
         return response()->json($slice, Response::HTTP_OK);
     }
 
     public function search(MediaService $service)
     {
-        $slice = $service->search('movie', request()->query->all());
+        $slice = $service->search('tv', request()->query->all());
 
         return response()->json($slice, Response::HTTP_OK);
     }
 
     public function detail(string $id, MediaService $service)
     {
-        $slice = $service->detail('movie', ['movie' => $id], request()->query->all());
+        $slice = $service->detail('tv', ['tv' => $id], request()->query->all());
 
         return response()->json($slice, Response::HTTP_OK);
     }
 
     public function videos(string $id, MediaService $service)
     {
-        $slice = $service->videos('movie', ['movie' => $id], request()->query->all());
+        $slice = $service->videos('tv', ['tv' => $id], request()->query->all());
 
         return response()->json($slice, Response::HTTP_OK);
     }
