@@ -2,7 +2,9 @@
 
 namespace App\Services\MediaService;
 
+use App\Exceptions\MediaServiceException;
 use App\Services\DataSource\ExternalApiDataSourceInterface;
+use Exception;
 
 class MediaService implements MediaServiceInterface
 {
@@ -18,20 +20,25 @@ class MediaService implements MediaServiceInterface
      */
     public function getPage(string $mediaType, array $params): object
     {
-        $page = $params['page'] ?? 1;
-        $per_page = 10;
+        try {
+            $page = $params['page'] ?? 1;
+            $per_page = 10;
 
-        $offset = ($page % 2 === 1) ? 0 : $per_page;
-        //page number to be used by TMDB api
-        $params['page'] = (int)floor($page / 2) + 1;
+            $offset = ($page % 2 === 1) ? 0 : $per_page;
+            //page number to be used by TMDB api
+            $params['page'] = (int)floor($page / 2) + 1;
 
-        $data = $this->dataSource->getData('discover', $mediaType, null, $params);
+            $data = $this->dataSource->getData('discover', $mediaType, null, $params);
 
-        $data->page = $page;
-        $data->total_pages = (int)ceil($data->total_results / $per_page);
-        $data->results = array_slice($data->results, $offset, $per_page);
+            $data->page = $page;
+            $data->total_pages = (int)ceil($data->total_results / $per_page);
+            $data->results = array_slice($data->results, $offset, $per_page);
 
-        return $data;
+            return $data;
+
+        } catch (Exception $exception) {
+            throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
+        }
     }
 
     /*
@@ -39,13 +46,17 @@ class MediaService implements MediaServiceInterface
      */
     public function getTopRated(string $mediaType, $params): array
     {
-        $per_page = 5;
+        try {
+            $per_page = 5;
 
-        $data = $this->dataSource->getData('top_rated', $mediaType, null, $params);
+            $data = $this->dataSource->getData('top_rated', $mediaType, null, $params);
 
-        $items = array_slice($data->results, 0, $per_page);
+            $items = array_slice($data->results, 0, $per_page);
 
-        return $items;
+            return $items;
+        } catch (Exception $exception) {
+            throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
+        }
     }
 
     /*
@@ -53,7 +64,11 @@ class MediaService implements MediaServiceInterface
      */
     public function search(string $mediaType, array $params): object
     {
-        return $this->dataSource->getData('search', $mediaType, null, $params);
+        try {
+            return $this->dataSource->getData('search', $mediaType, null, $params);
+        } catch (Exception $exception) {
+            throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
+        }
     }
 
     /*
@@ -61,7 +76,11 @@ class MediaService implements MediaServiceInterface
      */
     public function detail(string $mediaType, array $ids, array $params): object
     {
-        return $this->dataSource->getData('detail', $mediaType, $ids, $params);
+        try {
+            return $this->dataSource->getData('detail', $mediaType, $ids, $params);
+        } catch (Exception $exception) {
+            throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
+        }
     }
 
     /*
@@ -69,6 +88,10 @@ class MediaService implements MediaServiceInterface
      */
     public function videos(string $mediaType, array $ids, array $params): object
     {
-        return $this->dataSource->getData('videos', $mediaType, $ids, $params);
+        try {
+            return $this->dataSource->getData('videos', $mediaType, $ids, $params);
+        } catch (Exception $exception) {
+            throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services\DataSource;
 
+use App\Exceptions\DataSourceException;
 use Illuminate\Support\Facades\Http;
 
 class MediaDataSource implements ExternalApiDataSourceInterface
@@ -26,11 +27,15 @@ class MediaDataSource implements ExternalApiDataSourceInterface
      */
     public function RequestData(string $uri, array $params): Object
     {
-        $response = Http::withHeaders(['Authorization' =>'Bearer ' .env('TMDB_API_TOKEN')])->get($uri, $params);
+        try {
+            $response = Http::withHeaders(['Authorization' =>'Bearer ' .env('TMDB_API_TOKEN')])->get($uri, $params);
 
-        $data = json_decode($response->body());
+            $data = json_decode($response->body());
 
-        return $data;
+            return $data;
+        } catch (\Exception $e) {
+            throw new DataSourceException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /*

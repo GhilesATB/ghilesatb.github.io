@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Authentication;
 
+use App\Exceptions\AuthFailException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Authentification\LoginRequest;
 use App\Http\Requests\Authentification\RegisterRequest;
@@ -15,9 +16,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request): \Symfony\Component\HttpFoundation\Response
     {
         if (!Auth::attempt($request->only(['name', 'password']))) {
-            return response()->json([
-                'message' => 'name & Password does not match with our record.',
-            ], 401);
+            throw new AuthFailException('wrong credentials', Response::HTTP_UNAUTHORIZED);
         }
 
         $user = Auth::user();
