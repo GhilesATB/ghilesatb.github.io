@@ -4,41 +4,44 @@ namespace App\Http\Controllers\Api\Medias;
 
 use App\Http\Controllers\Controller;
 use App\Services\MediaService\MediaService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class MoviesController extends Controller
 {
-    public function index(MediaService $movieService)
+    const MEDIA = 'movie';
+
+    public function index(MediaService $movieService): JsonResponse
     {
-        $data = $movieService->getPage('movie', request()->query->all());
+        $data = $movieService->getPage(self::MEDIA, request()->query->all());
 
         return response()->json($data, Response::HTTP_OK);
     }
 
-    public function topRated(MediaService $service)
+    public function topRated(MediaService $service): JsonResponse
     {
-        $slice = $service->getTopRated('movie', request()->query->all());
+        $slice = $service->getTopRated(self::MEDIA, request()->query->all());
 
         return response()->json($slice, Response::HTTP_OK);
     }
 
-    public function search(MediaService $service)
+    public function search(MediaService $service): JsonResponse
     {
-        $slice = $service->search('movie', request()->query->all());
+        $slice = $service->search(self::MEDIA, request()->query->all());
 
         return response()->json($slice, Response::HTTP_OK);
     }
 
-    public function detail(string $id, MediaService $service)
+    public function detail(string $id, MediaService $service): JsonResponse
     {
-        $slice = $service->detail('movie', ['movie' => $id], request()->query->all());
+        $slice = $service->detail(self::MEDIA, [self::MEDIA => $id], request()->query->all());
 
         return response()->json($slice, Response::HTTP_OK);
     }
 
-    public function videos(string $id, MediaService $service)
+    public function videos(string $id, MediaService $service): JsonResponse
     {
-        $slice = $service->videos('movie', ['movie' => $id], request()->query->all());
+        $slice = $service->videos(self::MEDIA, [self::MEDIA => $id], request()->query->all());
 
         return response()->json($slice, Response::HTTP_OK);
     }
