@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Http;
 class MediaDataSource implements ExternalApiDataSourceInterface
 {
     public function __construct(private readonly string $base_url)
-    {}
+    {
+    }
 
     /*
      * build and request data from external Api based on term media_type , ids and request parameters
