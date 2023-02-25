@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request): \Symfony\Component\HttpFoundation\Response
+    public function login(LoginRequest $request): Response
     {
         if (!Auth::attempt($request->only(['name', 'password']))) {
             throw new AuthFailException('wrong credentials', Response::HTTP_UNAUTHORIZED);
