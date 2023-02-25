@@ -2,6 +2,7 @@
 
 namespace App\Services\DataSource;
 
+use App\Enums\Terms;
 use App\Exceptions\DataSourceException;
 use App\Exceptions\InvalidArgumentException;
 use Exception;
@@ -17,7 +18,7 @@ class MediaDataSource implements ExternalApiDataSourceInterface
     /*
      * build and request data from external Api based on term media_type , ids and request parameters
      */
-    public function getData(Terms $term, string $mediaType, array $id = null, $params = null): object
+    public function getData(string $term, string $mediaType, string $id = null, $params = null): object
     {
         $uri = $this->makeUri($term, $mediaType, $id);
         $data = $this->RequestData($uri, $params);
@@ -43,14 +44,14 @@ class MediaDataSource implements ExternalApiDataSourceInterface
     /*
      * build request uri based on term and ids
      */
-    private function makeUri(Terms $term, string $mediaType, array $ids = null): string
+    private function makeUri(string $term, string $mediaType, string $id = null): string
     {
         $uri = match ($term) {
-            Terms::DISCOVER => "{$this->base_url}/discover/" . $mediaType,
-            Terms::TOP_RATED => "{$this->base_url}/{$mediaType}/top_rated",
-            Terms::SEARCH => "{$this->base_url}/search/{$mediaType}",
-            Terms::DETAIL => "{$this->base_url}/{$mediaType}/{$ids[$mediaType]}",
-            Terms::VIDEOS => "{$this->base_url}/{$mediaType}/{$ids[$mediaType]}/videos",
+            Terms::DISCOVER->value => "{$this->base_url}/discover/" . $mediaType,
+            Terms::TOP_RATED->value => "{$this->base_url}/{$mediaType}/top_rated",
+            Terms::SEARCH->value => "{$this->base_url}/search/{$mediaType}",
+            Terms::DETAIL->value => "{$this->base_url}/{$mediaType}/{$id}",
+            Terms::VIDEOS->value => "{$this->base_url}/{$mediaType}/{$id}/videos",
 
             default => throw new InvalidArgumentException('the given value is invalid', Response::HTTP_BAD_REQUEST)
         };
