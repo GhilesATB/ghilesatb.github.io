@@ -17,7 +17,7 @@ class MediaDataSource implements ExternalApiDataSourceInterface
     /*
      * build and request data from external Api based on term media_type , ids and request parameters
      */
-    public function getData(string $term, string $mediaType, array $id = null, $params = null): object
+    public function getData(Terms $term, string $mediaType, array $id = null, $params = null): object
     {
         $uri = $this->makeUri($term, $mediaType, $id);
         $data = $this->RequestData($uri, $params);
@@ -43,14 +43,14 @@ class MediaDataSource implements ExternalApiDataSourceInterface
     /*
      * build request uri based on term and ids
      */
-    private function makeUri(string $term, string $mediaType, array $ids = null): string
+    private function makeUri(Terms $term, string $mediaType, array $ids = null): string
     {
         $uri = match ($term) {
-            'discover' => "{$this->base_url}/discover/" . $mediaType,
-            'top_rated' => "{$this->base_url}/{$mediaType}/top_rated",
-            'search' => "{$this->base_url}/search/{$mediaType}",
-            'detail' => "{$this->base_url}/{$mediaType}/{$ids[$mediaType]}",
-            'videos' => "{$this->base_url}/{$mediaType}/{$ids[$mediaType]}/videos",
+            Terms::DISCOVER => "{$this->base_url}/discover/" . $mediaType,
+            Terms::TOP_RATED => "{$this->base_url}/{$mediaType}/top_rated",
+            Terms::SEARCH => "{$this->base_url}/search/{$mediaType}",
+            Terms::DETAIL => "{$this->base_url}/{$mediaType}/{$ids[$mediaType]}",
+            Terms::VIDEOS => "{$this->base_url}/{$mediaType}/{$ids[$mediaType]}/videos",
 
             default => throw new InvalidArgumentException('the given value is invalid', Response::HTTP_BAD_REQUEST)
         };

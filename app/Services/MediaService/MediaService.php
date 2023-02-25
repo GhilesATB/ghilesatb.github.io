@@ -2,6 +2,7 @@
 
 namespace App\Services\MediaService;
 
+use App\Enums\Terms;
 use App\Exceptions\MediaServiceException;
 use App\Services\DataSource\ExternalApiDataSourceInterface;
 use Exception;
@@ -32,14 +33,14 @@ class MediaService implements MediaServiceInterface
 
             //empty cache
             if (Cache::missing('paginated_data')) {
-                $data = $this->dataSource->getData('discover', $mediaType, null, $params);
+                $data = $this->dataSource->getData(Terms::DISCOVER, $mediaType, null, $params);
                 Cache::put('paginated_data', ["page" => $data, 'tmdb_page' => $tmdb_page], 60);
 
             // page changed (page to request from TMDB)
             } elseif (filled($cached_page_num = Cache::get('paginated_data')['tmdb_page']) &&
                 ($cached_page_num !== $tmdb_page)) {
 
-                $data = $this->dataSource->getData('discover', $mediaType, null, $params);
+                $data = $this->dataSource->getData(Terms::DISCOVER, $mediaType, null, $params);
                 Cache::put('paginated_data', ["page" => $data, 'tmdb_page' => $tmdb_page], 60);
 
             //load data from cache
@@ -65,7 +66,7 @@ class MediaService implements MediaServiceInterface
         try {
             $per_page = 5;
 
-            $data = $this->dataSource->getData('top_rated', $mediaType, null, $params);
+            $data = $this->dataSource->getData(Terms::TOP_RATED, $mediaType, null, $params);
 
             $items = array_slice($data->results, 0, $per_page);
 
@@ -81,7 +82,7 @@ class MediaService implements MediaServiceInterface
     public function search(string $mediaType, array $params): object
     {
         try {
-            return $this->dataSource->getData('search', $mediaType, null, $params);
+            return $this->dataSource->getData(Terms::SEARCH, $mediaType, null, $params);
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -93,7 +94,7 @@ class MediaService implements MediaServiceInterface
     public function detail(string $mediaType, array $ids, array $params): object
     {
         try {
-            return $this->dataSource->getData('detail', $mediaType, $ids, $params);
+            return $this->dataSource->getData(Terms::DETAIL, $mediaType, $ids, $params);
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -105,10 +106,9 @@ class MediaService implements MediaServiceInterface
     public function videos(string $mediaType, array $ids, array $params): object
     {
         try {
-            return $this->dataSource->getData('videos', $mediaType, $ids, $params);
+            return $this->dataSource->getData(Terms::VIDEOS, $mediaType, $ids, $params);
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
-
 }
