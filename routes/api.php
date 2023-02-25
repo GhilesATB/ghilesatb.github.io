@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Media\MoviesController;
+use App\Http\Controllers\Api\Media\SeriesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,14 @@ Route::prefix('/movies')->group(function () {
     Route::get('/{id}/detail', [MoviesController::class, 'detail']);
     Route::get('/{id}/videos', [MoviesController::class, 'videos']);
     Route::get('/search', [MoviesController::class, 'search']);
+});
+
+Route::prefix('/tv')->group(function () {
+    Route::get('/', [SeriesController::class, 'index']);
+    Route::get('/top-rated', [SeriesController::class, 'topRated']);
+    Route::get('/{id}/detail', [SeriesController::class, 'detail']);
+    Route::get('/{id}/videos', [SeriesController::class, 'videos']);
+    Route::get('/search', [SeriesController::class, 'search']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
