@@ -1,0 +1,187 @@
+openapi: 3.0.0
+info:
+  title: FlixFlex
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8000
+tags:
+  - name: authentication
+  - name: movies
+  - name: TV
+  - name: account
+paths:
+  /api/register:
+    post:
+      tags:
+        - authentication
+      summary: register
+      description: Register user to flixflex application
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: user2
+                email: users@gmail.com
+                password: '123456'
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/login:
+    post:
+      tags:
+        - authentication
+      summary: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: user@gmail.com
+                password: '123456'
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: bearer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/movies:
+    get:
+      tags:
+        - TV
+      summary: series
+      parameters:
+        - name: api_key
+          in: query
+          schema:
+            type: string
+          example: ff55a5b8044da2cf77489c3d64a273d7
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/movies/top-rated:
+    get:
+      tags:
+        - TV
+      summary: series top rated 5
+      parameters:
+        - name: api_key
+          in: query
+          schema:
+            type: string
+          example: ff55a5b8044da2cf77489c3d64a273d7
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/movies/550/detail:
+    get:
+      tags:
+        - TV
+      summary: series detail
+      parameters:
+        - name: api_key
+          in: query
+          schema:
+            type: string
+          example: ff55a5b8044da2cf77489c3d64a273d7
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/movies/550/videos:
+    get:
+      tags:
+        - TV
+      summary: series videos
+      parameters:
+        - name: api_key
+          in: query
+          schema:
+            type: string
+          example: ff55a5b8044da2cf77489c3d64a273d7
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/account/17843349/favorites:
+    get:
+      tags:
+        - account
+      summary: account favorites
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/account/17843349/delete-favorite/2:
+    delete:
+      tags:
+        - account
+      summary: delete from favorite
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/tv:
+    get:
+      tags:
+        - default
+      summary: logout
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: bearer 15|ihiqqFLY0yCTLD0pQLF3gJbfosknTfMVVYtZT6cM
+        - name: api_key
+          in: query
+          schema:
+            type: string
+          example: ff55a5b8044da2cf77489c3d64a273d7
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
