@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Authentication\AuthController;
 use App\Http\Controllers\Api\Media\MoviesController;
 use App\Http\Controllers\Api\Media\SeriesController;
 use Illuminate\Http\Request;
@@ -26,6 +27,12 @@ Route::prefix('/movies')->group(function () {
     Route::get('/{id}/videos', [MoviesController::class, 'videos']);
     Route::get('/search', [MoviesController::class, 'search']);
 });
+
+/*
+ * Authentication routes
+ */
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
 Route::prefix('/tv')->group(function () {
     Route::get('/', [SeriesController::class, 'index']);
