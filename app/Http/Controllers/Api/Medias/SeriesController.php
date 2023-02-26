@@ -18,31 +18,31 @@ class SeriesController extends Controller
         return response()->json($data, Response::HTTP_OK);
     }
 
-    public function topRated(MediaService $service): JsonResponse
+    public function topRated(MediaService $mediaService): JsonResponse
     {
-        $slice = $service->getTopRated(self::MEDIA, request()->query->all());
+        $data = $mediaService->getTopRated(self::MEDIA, request()->query->all());
 
-        return response()->json($slice, Response::HTTP_OK);
+        return response()->json($data, Response::HTTP_OK);
     }
 
-    public function search(MediaService $service): JsonResponse
+    public function search(MediaService $mediaService): JsonResponse
     {
-        $slice = $service->search(self::MEDIA, request()->query->all());
+        $data = $mediaService->search(self::MEDIA, request()->query->all());
 
-        return response()->json($slice, Response::HTTP_OK);
+        return response()->json($data, Response::HTTP_OK);
     }
 
-    public function detail(string $id, MediaService $service): JsonResponse
+    public function detail(string $id, MediaService $mediaService): JsonResponse
     {
-        $slice = $service->detail(self::MEDIA, $id, request()->query->all());
+        $data = $mediaService->detail(self::MEDIA, $id, request()->query->all());
 
-        return response()->json($slice, Response::HTTP_OK);
+        return response()->json($data, Response::HTTP_OK);
     }
 
-    public function videos(string $id, MediaService $service): JsonResponse
+    public function videos(string $id, MediaService $mediaService): JsonResponse
     {
-        $slice = $service->videos(self::MEDIA, $id, request()->query->all());
+        $data = $mediaService->videos(self::MEDIA, $id, request()->query->all());
 
-        return response()->json($slice, Response::HTTP_OK);
+        return response()->json($data, Response::HTTP_OK);
     }
 }
