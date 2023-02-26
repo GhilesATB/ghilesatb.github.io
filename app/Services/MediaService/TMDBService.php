@@ -29,25 +29,15 @@ class TMDBService implements MediaServiceInterface
 
             $offset = ($page % 2 === 1) ? 0 : $per_page;
             //page number to be used by TMDB api
-            $tmdb_page = (int)floor($page / 2) + 1;
+            $tmdb_page = (int)ceil($page / 2);
             $params['page'] = (int)floor($page / 2) + 1;
 
-
             //empty cache
-            if (Cache::missing('paginated_data')) {
-                $data = $this->dataSource->RequestData($pageUri, $params);
-                Cache::put('paginated_data', ["page" => $data, 'tmdb_page' => $tmdb_page], 60);
-
-                // page changed (page to request from TMDB)
-            } elseif (filled($cached_page_num = Cache::get('paginated_data')['tmdb_page']) &&
-                ($cached_page_num !== $tmdb_page)) {
-
-                $data = $this->dataSource->RequestData($pageUri, $params);
-                Cache::put('paginated_data', ["page" => $data, 'tmdb_page' => $tmdb_page], 60);
-
-                //load data from cache
-            } else {
+            if ($this->isCachedPage($tmdb_page)) {
                 $data = Cache::get('paginated_data')['page'];
+            } else {
+                $data = $this->dataSource->RequestData($pageUri, $params);
+                Cache::put('paginated_data', ["page" => $data, 'tmdb_page' => $tmdb_page], 60);
             }
 
             $data->page = $page;
@@ -89,7 +79,6 @@ class TMDBService implements MediaServiceInterface
             $searchUri = "search/{$mediaType}";
 
             return $this->dataSource->RequestData($searchUri, $params);
-
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -104,7 +93,6 @@ class TMDBService implements MediaServiceInterface
             $detail = "{$mediaType}/{$id}";
 
             return $this->dataSource->RequestData($detail, $params);
-
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -119,9 +107,23 @@ class TMDBService implements MediaServiceInterface
             $videosUrl = "{$mediaType}/{$id}/videos";
 
             return $this->dataSource->RequestData($videosUrl, $params);
-
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
+    }
+
+    private function isCachedPage(int $num): bool
+    {
+        if (Cache::missing('paginated_data')) {
+            return false;
+        }
+
+        $cached_page_num = Cache::get('paginated_data')['tmdb_page'];
+
+        if ($cached_page_num !== $num) {
+            return false;
+        }
+
+        return true;
     }
 }
