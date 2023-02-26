@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use App\Services\DataSource\ExternalApiDataSourceInterface;
 use App\Services\DataSource\MediaDataSource;
-use App\Services\MediaService\MediaService;
+use App\Services\MediaService\TMDBService;
 use App\Services\MediaService\MediaServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(MediaServiceInterface::class, function () {
-            return new MediaService(new MediaDataSource(Config('externalapidataprovider.source_url')));
+            return new TMDBService(new MediaDataSource(Config('externalapidataprovider.source_url')));
         });
     }
 

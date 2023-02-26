@@ -7,7 +7,7 @@ use App\Services\DataSource\ExternalApiDataSourceInterface;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 
-class MediaService implements MediaServiceInterface
+class TMDBService implements MediaServiceInterface
 {
     public function __construct(private ExternalApiDataSourceInterface $dataSource)
     {
@@ -22,6 +22,8 @@ class MediaService implements MediaServiceInterface
     public function getPage(string $mediaType, array $params): object
     {
         try {
+            $pageUri = "discover/{$mediaType}";
+
             $page = $params['page'] ?? 1;
             $per_page = 10;
 
@@ -30,16 +32,17 @@ class MediaService implements MediaServiceInterface
             $tmdb_page = (int)floor($page / 2) + 1;
             $params['page'] = (int)floor($page / 2) + 1;
 
+
             //empty cache
             if (Cache::missing('paginated_data')) {
-                $data = $this->dataSource->getData('discover', $mediaType, null, $params);
+                $data = $this->dataSource->RequestData($pageUri, $params);
                 Cache::put('paginated_data', ["page" => $data, 'tmdb_page' => $tmdb_page], 60);
 
                 // page changed (page to request from TMDB)
             } elseif (filled($cached_page_num = Cache::get('paginated_data')['tmdb_page']) &&
                 ($cached_page_num !== $tmdb_page)) {
 
-                $data = $this->dataSource->getData('discover', $mediaType, null, $params);
+                $data = $this->dataSource->RequestData($pageUri, $params);
                 Cache::put('paginated_data', ["page" => $data, 'tmdb_page' => $tmdb_page], 60);
 
                 //load data from cache
@@ -65,7 +68,9 @@ class MediaService implements MediaServiceInterface
         try {
             $per_page = 5;
 
-            $data = $this->dataSource->getData('top_rated', $mediaType, null, $params);
+            $topRated = "{$mediaType}/top_rated";
+
+            $data = $this->dataSource->RequestData($topRated, $params);
 
             $items = array_slice($data->results, 0, $per_page);
 
@@ -81,7 +86,10 @@ class MediaService implements MediaServiceInterface
     public function search(string $mediaType, array $params): object
     {
         try {
-            return $this->dataSource->getData('search', $mediaType, null, $params);
+            $searchUri = "search/{$mediaType}";
+
+            return $this->dataSource->RequestData($searchUri, $params);
+
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -93,7 +101,10 @@ class MediaService implements MediaServiceInterface
     public function detail(string $mediaType, string $id, array $params): object
     {
         try {
-            return $this->dataSource->getData('detail', $mediaType, $id, $params);
+            $detail = "{$mediaType}/{$id}";
+
+            return $this->dataSource->RequestData($detail, $params);
+
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -105,7 +116,10 @@ class MediaService implements MediaServiceInterface
     public function videos(string $mediaType, string $id, array $params): object
     {
         try {
-            return $this->dataSource->getData('videos', $mediaType, $id, $params);
+            $videosUrl = "{$mediaType}/{$id}/videos";
+
+            return $this->dataSource->RequestData($videosUrl, $params);
+
         } catch (Exception $exception) {
             throw new MediaServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
