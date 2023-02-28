@@ -5,7 +5,7 @@ info:
   title: FlixFlex-api
   version: 1.0.0
 servers:
-  - url: 'http://127.0.0.1:8000'
+  - url: "http://127.0.0.1:8000"
 components:
   securitySchemes:
     bearerAuth:
@@ -17,74 +17,6 @@ tags:
   - name: account
   - name: Authentication
 paths:
-  /api/login:
-    post:
-      tags:
-        - Authentication
-      summary: authenticate
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties: {}
-        description: |-
-          {
-              "name": "user",
-              "password":"12345678"
-          }
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json: {}
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-        '422':
-          description: Unprocessable Entity (WebDAV)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  errors:
-                    type: object
-                    properties:
-                      name:
-                        type: array
-                        items:
-                          type: string
-                      password:
-                        type: array
-                        items:
-                          type: string
-                x-examples:
-                  Example 1:
-                    message: The name field is required. (and 1 more error)
-                    errors:
-                      name:
-                        - The name field is required.
-                      password:
-                        - The password field is required.
-              examples:
-                Example 1:
-                  value:
-                    message: string
-                    errors:
-                      name:
-                        - string
-                      password:
-                        - string
-        '500':
-          description: Internal Server Error
-      description: ''
   /api/register:
     post:
       tags:
@@ -103,14 +35,14 @@ paths:
               x-examples:
                 Example 1:
                   name: user
-                  password: '12345678'
+                  password: "12345678"
         description: |-
           {
               "name": "user",
               "password":"12345678"
           }
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -149,10 +81,11 @@ paths:
                         - string
   /account/favorites:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: favorites
+      tags:
+        - account
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -192,21 +125,21 @@ paths:
                       title: Fight Club
                       overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
                       poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                      vote_average: '8.4'
-                      release_date: '1999-10-15T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:40.000000Z'
-                      updated_at: '2023-02-25T14:28:40.000000Z'
+                      vote_average: "8.4"
+                      release_date: "1999-10-15T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:40.000000Z"
+                      updated_at: "2023-02-25T14:28:40.000000Z"
                     - id: 3
                       media_id: 551
                       user_id: 1
                       popularity: 18.19
                       title: The Poseidon Adventure
-                      overview: 'When their ocean liner capsizes, a group of passengers struggle to survive and escape.'
+                      overview: "When their ocean liner capsizes, a group of passengers struggle to survive and escape."
                       poster_path: /6RGiA5BfhelU9zoD0b1GAG4GWWf.jpg
-                      vote_average: '7.1'
-                      release_date: '1972-12-13T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:47.000000Z'
-                      updated_at: '2023-02-25T14:28:47.000000Z'
+                      vote_average: "7.1"
+                      release_date: "1972-12-13T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:47.000000Z"
+                      updated_at: "2023-02-25T14:28:47.000000Z"
               examples:
                 Example 1:
                   value:
@@ -222,8 +155,15 @@ paths:
                       created_at: string
                       updated_at: string
       operationId: get-account-favorites
-      description: 'As a user, I should be able to view the list of my favorite movies and series'
-  /api/account/id/mark-as-favorite:
+      description: "As a user, I should be able to view the list of my favorite movies and series"
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+          description: bearer token
+    parameters: []
+  "/api/account/mark-as-favorite/{media_id}":
     post:
       tags:
         - account
@@ -234,41 +174,14 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
-                  type: integer
+                media_type:
+                  type: string
                 media_id:
-                  type: integer
-                popularity:
-                  type: number
-                title:
-                  type: string
-                overview:
-                  type: string
-                vote_average:
-                  type: number
-                poster_path:
-                  type: string
-                release_date:
-                  type: string
-                updated_at:
-                  type: string
-                created_at:
-                  type: string
-                id:
                   type: integer
               x-examples:
                 Example 1:
-                  user_id: 1
-                  media_id: 551
-                  popularity: 18.193
-                  title: The Poseidon Adventure
-                  overview: 'When their ocean liner capsizes, a group of passengers struggle to survive and escape.'
-                  vote_average: 7.1
-                  poster_path: /6RGiA5BfhelU9zoD0b1GAG4GWWf.jpg
-                  release_date: '1972-12-13T00:00:00.000000Z'
-                  updated_at: '2023-02-25T14:28:47.000000Z'
-                  created_at: '2023-02-25T14:28:47.000000Z'
-                  id: 3
+                  media_type: movie
+                  media_id: 552
             examples:
               Example 1:
                 value:
@@ -292,7 +205,7 @@ paths:
             type: string
           example: application/json
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -332,21 +245,21 @@ paths:
                       title: Fight Club
                       overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
                       poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                      vote_average: '8.4'
-                      release_date: '1999-10-15T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:40.000000Z'
-                      updated_at: '2023-02-25T14:28:40.000000Z'
+                      vote_average: "8.4"
+                      release_date: "1999-10-15T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:40.000000Z"
+                      updated_at: "2023-02-25T14:28:40.000000Z"
                     - id: 3
                       media_id: 551
                       user_id: 1
                       popularity: 18.19
                       title: The Poseidon Adventure
-                      overview: 'When their ocean liner capsizes, a group of passengers struggle to survive and escape.'
+                      overview: "When their ocean liner capsizes, a group of passengers struggle to survive and escape."
                       poster_path: /6RGiA5BfhelU9zoD0b1GAG4GWWf.jpg
-                      vote_average: '7.1'
-                      release_date: '1972-12-13T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:47.000000Z'
-                      updated_at: '2023-02-25T14:28:47.000000Z'
+                      vote_average: "7.1"
+                      release_date: "1972-12-13T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:47.000000Z"
+                      updated_at: "2023-02-25T14:28:47.000000Z"
               examples:
                 Example 1:
                   value:
@@ -361,32 +274,37 @@ paths:
                       release_date: string
                       created_at: string
                       updated_at: string
-      description: 'As a user, I should be able to add a movie or a series to my favorites list'
-    parameters: []
-  /api/account/account_id/delete-favorite/favorite_id:
+      description: "As a user, I should be able to add a movie or a series to my favorites list"
+    parameters:
+      - schema:
+          type: string
+        name: media_id
+        in: path
+        required: true
+  "/api/account/delete-favorite/{favorite_id}":
     delete:
       tags:
         - account
       summary: delete from favorite
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json: {}
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties: {}
-      description: 'As a user, I should be able to delete a movie or a series from my favorites list'
-    parameters: []
+      description: "As a user, I should be able to delete a movie or a series from my favorites list"
+    parameters:
+      - schema:
+          type: string
+        name: favorite_id
+        in: path
+        required: true
   /movies:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: get movies
+      tags:
+        - movies
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -426,21 +344,21 @@ paths:
                       title: Fight Club
                       overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
                       poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                      vote_average: '8.4'
-                      release_date: '1999-10-15T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:40.000000Z'
-                      updated_at: '2023-02-25T14:28:40.000000Z'
+                      vote_average: "8.4"
+                      release_date: "1999-10-15T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:40.000000Z"
+                      updated_at: "2023-02-25T14:28:40.000000Z"
                     - id: 3
                       media_id: 551
                       user_id: 1
                       popularity: 18.19
                       title: The Poseidon Adventure
-                      overview: 'When their ocean liner capsizes, a group of passengers struggle to survive and escape.'
+                      overview: "When their ocean liner capsizes, a group of passengers struggle to survive and escape."
                       poster_path: /6RGiA5BfhelU9zoD0b1GAG4GWWf.jpg
-                      vote_average: '7.1'
-                      release_date: '1972-12-13T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:47.000000Z'
-                      updated_at: '2023-02-25T14:28:47.000000Z'
+                      vote_average: "7.1"
+                      release_date: "1972-12-13T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:47.000000Z"
+                      updated_at: "2023-02-25T14:28:47.000000Z"
               examples:
                 Example 1:
                   value:
@@ -456,249 +374,6 @@ paths:
                       created_at: string
                       updated_at: string
       operationId: get-movies
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                page:
-                  type: string
-                results:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      adult:
-                        type: boolean
-                      backdrop_path:
-                        type: string
-                      genre_ids:
-                        type: array
-                        items:
-                          type: integer
-                      id:
-                        type: integer
-                      original_language:
-                        type: string
-                      original_title:
-                        type: string
-                      overview:
-                        type: string
-                      popularity:
-                        type: number
-                      poster_path:
-                        type: string
-                      release_date:
-                        type: string
-                      title:
-                        type: string
-                      video:
-                        type: boolean
-                      vote_average:
-                        type: number
-                      vote_count:
-                        type: integer
-                total_pages:
-                  type: integer
-                total_results:
-                  type: integer
-              x-examples:
-                Example 1:
-                  page: '1'
-                  results:
-                    - adult: false
-                      backdrop_path: /xDMIl84Qo5Tsu62c9DGWhmPI67A.jpg
-                      genre_ids:
-                        - 28
-                        - 12
-                        - 878
-                      id: 505642
-                      original_language: en
-                      original_title: 'Black Panther: Wakanda Forever'
-                      overview: 'Queen Ramonda, Shuri, M’Baku, Okoye and the Dora Milaje fight to protect their nation from intervening world powers in the wake of King T’Challa’s death. As the Wakandans strive to embrace their next chapter, the heroes must band together with the help of War Dog Nakia and Everett Ross and forge a new path for the kingdom of Wakanda.'
-                      popularity: 3095.36
-                      poster_path: /sv1xJUazXeYqALzczSZ3O6nkH75.jpg
-                      release_date: '2022-11-09'
-                      title: 'Black Panther: Wakanda Forever'
-                      video: false
-                      vote_average: 7.4
-                      vote_count: 3494
-                    - adult: false
-                      backdrop_path: /9Rq14Eyrf7Tu1xk0Pl7VcNbNh1n.jpg
-                      genre_ids:
-                        - 28
-                        - 12
-                        - 53
-                      id: 646389
-                      original_language: en
-                      original_title: Plane
-                      overview: 'After a heroic job of successfully landing his storm-damaged aircraft in a war zone, a fearless pilot finds himself between the agendas of multiple militias planning to take the plane and its passengers hostage.'
-                      popularity: 2643.784
-                      poster_path: /qi9r5xBgcc9KTxlOLjssEbDgO0J.jpg
-                      release_date: '2023-01-12'
-                      title: Plane
-                      video: false
-                      vote_average: 6.8
-                      vote_count: 595
-                    - adult: false
-                      backdrop_path: /b1Y8SUb12gPHCSSSNlbX4nB3IKy.jpg
-                      genre_ids:
-                        - 16
-                        - 12
-                        - 35
-                        - 10751
-                        - 14
-                      id: 315162
-                      original_language: en
-                      original_title: 'Puss in Boots: The Last Wish'
-                      overview: 'Puss in Boots discovers that his passion for adventure has taken its toll: He has burned through eight of his nine lives, leaving him with only one life left. Puss sets out on an epic journey to find the mythical Last Wish and restore his nine lives.'
-                      popularity: 2503.803
-                      poster_path: /kuf6dutpsT0vSVehic3EZIqkOBt.jpg
-                      release_date: '2022-12-07'
-                      title: 'Puss in Boots: The Last Wish'
-                      video: false
-                      vote_average: 8.5
-                      vote_count: 3999
-                    - adult: false
-                      backdrop_path: /8YFL5QQVPy3AgrEQxNYVSgiPEbe.jpg
-                      genre_ids:
-                        - 12
-                        - 878
-                        - 35
-                      id: 640146
-                      original_language: en
-                      original_title: 'Ant-Man and the Wasp: Quantumania'
-                      overview: 'Super-Hero partners Scott Lang and Hope van Dyne, along with with Hope''s parents Janet van Dyne and Hank Pym, and Scott''s daughter Cassie Lang, find themselves exploring the Quantum Realm, interacting with strange new creatures and embarking on an adventure that will push them beyond the limits of what they thought possible.'
-                      popularity: 2327.66
-                      poster_path: /ngl2FKBlU4fhbdsrtdom9LVLBXw.jpg
-                      release_date: '2023-02-10'
-                      title: 'Ant-Man and the Wasp: Quantumania'
-                      video: false
-                      vote_average: 6.5
-                      vote_count: 669
-                    - adult: false
-                      backdrop_path: /zGoZB4CboMzY1z4G3nU6BWnMDB2.jpg
-                      genre_ids:
-                        - 28
-                        - 10749
-                        - 35
-                      id: 758009
-                      original_language: en
-                      original_title: Shotgun Wedding
-                      overview: 'Darcy and Tom gather their families for the ultimate destination wedding but when the entire party is taken hostage, “’Til Death Do Us Part” takes on a whole new meaning in this hilarious, adrenaline-fueled adventure as Darcy and Tom must save their loved ones—if they don’t kill each other first.'
-                      popularity: 1481.616
-                      poster_path: /t79ozwWnwekO0ADIzsFP1E5SkvR.jpg
-                      release_date: '2022-12-28'
-                      title: Shotgun Wedding
-                      video: false
-                      vote_average: 6.4
-                      vote_count: 531
-                    - adult: false
-                      backdrop_path: /otOtC45BDzFW7nuxnWHMmnYsicK.jpg
-                      genre_ids:
-                        - 878
-                        - 27
-                        - 35
-                      id: 536554
-                      original_language: en
-                      original_title: M3GAN
-                      overview: 'A brilliant toy company roboticist uses artificial intelligence to develop M3GAN, a life-like doll programmed to emotionally bond with her newly orphaned niece. But when the doll''s programming works too well, she becomes overprotective of her new friend with terrifying results.'
-                      popularity: 1275.348
-                      poster_path: /d9nBoowhjiiYc4FBNtQkPY7c11H.jpg
-                      release_date: '2022-12-28'
-                      title: M3GAN
-                      video: false
-                      vote_average: 7.5
-                      vote_count: 1747
-                    - adult: false
-                      backdrop_path: /s16H6tpK2utvwDtzZ8Qy4qm5Emw.jpg
-                      genre_ids:
-                        - 878
-                        - 12
-                        - 28
-                      id: 76600
-                      original_language: en
-                      original_title: 'Avatar: The Way of Water'
-                      overview: 'Set more than a decade after the events of the first film, learn the story of the Sully family (Jake, Neytiri, and their kids), the trouble that follows them, the lengths they go to keep each other safe, the battles they fight to stay alive, and the tragedies they endure.'
-                      popularity: 1129.079
-                      poster_path: /t6HIqrRAclMCA60NsSmeqe9RmNV.jpg
-                      release_date: '2022-12-14'
-                      title: 'Avatar: The Way of Water'
-                      video: false
-                      vote_average: 7.7
-                      vote_count: 5431
-                    - adult: false
-                      backdrop_path: /cL0cdccOMzM508ODsWPfHVMMAzo.jpg
-                      genre_ids:
-                        - 28
-                      id: 267805
-                      original_language: en
-                      original_title: There Are No Saints
-                      overview: 'A man is imprisoned for a crime he didn''t commit. When his wife is murdered and his son kidnapped and taken to Mexico, he devises an elaborate and dangerous plan to rescue his son and avenge the murder.'
-                      popularity: 1065.378
-                      poster_path: /fcOTYArjKuAgufwHoTvx8w9UKCv.jpg
-                      release_date: '2022-05-27'
-                      title: There Are No Saints
-                      video: false
-                      vote_average: 5.8
-                      vote_count: 47
-                    - adult: false
-                      backdrop_path: /r7Dfg9aRZ78gJsmDlCirIIlNH3d.jpg
-                      genre_ids:
-                        - 18
-                      id: 785084
-                      original_language: en
-                      original_title: The Whale
-                      overview: A reclusive English teacher suffering from severe obesity attempts to reconnect with his estranged teenage daughter for one last chance at redemption.
-                      popularity: 1078.306
-                      poster_path: /oOD0V67bqsEE4Vnwav3CgxMNtWp.jpg
-                      release_date: '2022-12-09'
-                      title: The Whale
-                      video: false
-                      vote_average: 7.8
-                      vote_count: 331
-                    - adult: false
-                      backdrop_path: /zWDMQX0sPaW2u0N2pJaYA8bVVaJ.jpg
-                      genre_ids:
-                        - 27
-                        - 9648
-                        - 53
-                      id: 631842
-                      original_language: en
-                      original_title: Knock at the Cabin
-                      overview: 'While vacationing at a remote cabin, a young girl and her two fathers are taken hostage by four armed strangers who demand that the family make an unthinkable choice to avert the apocalypse. With limited access to the outside world, the family must decide what they believe before all is lost.'
-                      popularity: 855.793
-                      poster_path: /dm06L9pxDOL9jNSK4Cb6y139rrG.jpg
-                      release_date: '2023-02-01'
-                      title: Knock at the Cabin
-                      video: false
-                      vote_average: 6.6
-                      vote_count: 448
-                  total_pages: 74487
-                  total_results: 744870
-            examples:
-              Example 1:
-                value:
-                  page: string
-                  results:
-                    - adult: true
-                      backdrop_path: string
-                      genre_ids:
-                        - 0
-                      id: 0
-                      original_language: string
-                      original_title: string
-                      overview: string
-                      popularity: 0
-                      poster_path: string
-                      release_date: string
-                      title: string
-                      video: true
-                      vote_average: 0
-                      vote_count: 0
-                  total_pages: 0
-                  total_results: 0
       parameters:
         - schema:
             type: string
@@ -733,12 +408,13 @@ paths:
 
         As a user, I should be able to view, in the movies all the
         movies available in batches of 10
-  /movies /top-rated:
+  /movies/top-rated:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: get top rated movies
+      tags:
+        - movies
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -778,21 +454,21 @@ paths:
                       title: Fight Club
                       overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
                       poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                      vote_average: '8.4'
-                      release_date: '1999-10-15T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:40.000000Z'
-                      updated_at: '2023-02-25T14:28:40.000000Z'
+                      vote_average: "8.4"
+                      release_date: "1999-10-15T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:40.000000Z"
+                      updated_at: "2023-02-25T14:28:40.000000Z"
                     - id: 3
                       media_id: 551
                       user_id: 1
                       popularity: 18.19
                       title: The Poseidon Adventure
-                      overview: 'When their ocean liner capsizes, a group of passengers struggle to survive and escape.'
+                      overview: "When their ocean liner capsizes, a group of passengers struggle to survive and escape."
                       poster_path: /6RGiA5BfhelU9zoD0b1GAG4GWWf.jpg
-                      vote_average: '7.1'
-                      release_date: '1972-12-13T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:47.000000Z'
-                      updated_at: '2023-02-25T14:28:47.000000Z'
+                      vote_average: "7.1"
+                      release_date: "1972-12-13T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:47.000000Z"
+                      updated_at: "2023-02-25T14:28:47.000000Z"
               examples:
                 Example 1:
                   value:
@@ -808,156 +484,17 @@ paths:
                       created_at: string
                       updated_at: string
       operationId: get-movie-video
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  adult:
-                    type: boolean
-                  backdrop_path:
-                    type: string
-                  genre_ids:
-                    type: array
-                    items:
-                      type: integer
-                  id:
-                    type: integer
-                  original_language:
-                    type: string
-                  original_title:
-                    type: string
-                  overview:
-                    type: string
-                  popularity:
-                    type: number
-                  poster_path:
-                    type: string
-                  release_date:
-                    type: string
-                  title:
-                    type: string
-                  video:
-                    type: boolean
-                  vote_average:
-                    type: number
-                  vote_count:
-                    type: integer
-              x-examples:
-                Example 1:
-                  - adult: false
-                    backdrop_path: /ejniJnlOdtSgtbh8D7u2RxT6Uli.jpg
-                    genre_ids:
-                      - 35
-                      - 14
-                    id: 772071
-                    original_language: es
-                    original_title: Cuando Sea Joven
-                    overview: '70-year-old Malena gets a second chance at life when she magically turns into her 22-year-old self. Now, posing as "Maria" to hide her true identity, she becomes the lead singer of her grandson''s band and tries to recover her dream of singing, which she had to give up at some point.'
-                    popularity: 51.977
-                    poster_path: /6gIJuFHh5Lj4dNaPG3TzIMl7L68.jpg
-                    release_date: '2022-09-14'
-                    title: Cuando Sea Joven
-                    video: false
-                    vote_average: 8.7
-                    vote_count: 205
-                  - adult: false
-                    backdrop_path: /tmU7GeKVybMWFButWEGl2M4GeiP.jpg
-                    genre_ids:
-                      - 18
-                      - 80
-                    id: 238
-                    original_language: en
-                    original_title: The Godfather
-                    overview: 'Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family. When organized crime family patriarch, Vito Corleone barely survives an attempt on his life, his youngest son, Michael steps in to take care of the would-be killers, launching a campaign of bloody revenge.'
-                    popularity: 87.037
-                    poster_path: /3bhkrj58Vtu7enYsRolD1fZdja1.jpg
-                    release_date: '1972-03-14'
-                    title: The Godfather
-                    video: false
-                    vote_average: 8.7
-                    vote_count: 17505
-                  - adult: false
-                    backdrop_path: /wPU78OPN4BYEgWYdXyg0phMee64.jpg
-                    genre_ids:
-                      - 18
-                      - 80
-                    id: 278
-                    original_language: en
-                    original_title: The Shawshank Redemption
-                    overview: 'Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope.'
-                    popularity: 88.445
-                    poster_path: /hBcY0fE9pfXzvVaY4GKarweriG2.jpg
-                    release_date: '1994-09-23'
-                    title: The Shawshank Redemption
-                    video: false
-                    vote_average: 8.7
-                    vote_count: 23344
-                  - adult: false
-                    backdrop_path: /wxaBkuqVIgImjRHEMJoxL9Lq6i8.jpg
-                    genre_ids:
-                      - 16
-                      - 10751
-                      - 12
-                      - 14
-                    id: 995133
-                    original_language: en
-                    original_title: 'The Boy, the Mole, the Fox and the Horse'
-                    overview: 'The unlikely friendship of a boy, a mole, a fox and a horse traveling together in the boy’s search for home.'
-                    popularity: 29.827
-                    poster_path: /oQRgyQCzcyZvE6w5heM9ktVY0LT.jpg
-                    release_date: '2022-12-25'
-                    title: 'The Boy, the Mole, the Fox and the Horse'
-                    video: false
-                    vote_average: 8.6
-                    vote_count: 230
-                  - adult: false
-                    backdrop_path: /kGzFbGhp99zva6oZODW5atUtnqi.jpg
-                    genre_ids:
-                      - 18
-                      - 80
-                    id: 240
-                    original_language: en
-                    original_title: The Godfather Part II
-                    overview: 'In the continuing saga of the Corleone crime family, a young Vito Corleone grows up in Sicily and in 1910s New York. In the 1950s, Michael Corleone attempts to expand the family business into Las Vegas, Hollywood and Cuba.'
-                    popularity: 58.505
-                    poster_path: /hek3koDUyRQk7FIhPXsa6mT2Zc3.jpg
-                    release_date: '1974-12-20'
-                    title: The Godfather Part II
-                    video: false
-                    vote_average: 8.6
-                    vote_count: 10600
-            examples:
-              Example 1:
-                value:
-                  - adult: true
-                    backdrop_path: string
-                    genre_ids:
-                      - 0
-                    id: 0
-                    original_language: string
-                    original_title: string
-                    overview: string
-                    popularity: 0
-                    poster_path: string
-                    release_date: string
-                    title: string
-                    video: true
-                    vote_average: 0
-                    vote_count: 0
       description: |-
         As a user, I should be able to view the list of the top 5 movies in a
         dedicated section on the movies and series pages
     parameters: []
-  /movies /id/detail:
+  /movies/id/detail:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: get movie detail
+      tags:
+        - movies
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -997,21 +534,21 @@ paths:
                       title: Fight Club
                       overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
                       poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                      vote_average: '8.4'
-                      release_date: '1999-10-15T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:40.000000Z'
-                      updated_at: '2023-02-25T14:28:40.000000Z'
+                      vote_average: "8.4"
+                      release_date: "1999-10-15T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:40.000000Z"
+                      updated_at: "2023-02-25T14:28:40.000000Z"
                     - id: 3
                       media_id: 551
                       user_id: 1
                       popularity: 18.19
                       title: The Poseidon Adventure
-                      overview: 'When their ocean liner capsizes, a group of passengers struggle to survive and escape.'
+                      overview: "When their ocean liner capsizes, a group of passengers struggle to survive and escape."
                       poster_path: /6RGiA5BfhelU9zoD0b1GAG4GWWf.jpg
-                      vote_average: '7.1'
-                      release_date: '1972-12-13T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:47.000000Z'
-                      updated_at: '2023-02-25T14:28:47.000000Z'
+                      vote_average: "7.1"
+                      release_date: "1972-12-13T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:47.000000Z"
+                      updated_at: "2023-02-25T14:28:47.000000Z"
               examples:
                 Example 1:
                   value:
@@ -1027,209 +564,15 @@ paths:
                       created_at: string
                       updated_at: string
       operationId: get-movies-top-rated
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                adult:
-                  type: boolean
-                backdrop_path:
-                  type: string
-                belongs_to_collection:
-                  type: string
-                budget:
-                  type: integer
-                genres:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      name:
-                        type: string
-                homepage:
-                  type: string
-                id:
-                  type: integer
-                imdb_id:
-                  type: string
-                original_language:
-                  type: string
-                original_title:
-                  type: string
-                overview:
-                  type: string
-                popularity:
-                  type: number
-                poster_path:
-                  type: string
-                production_companies:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      logo_path:
-                        type: string
-                      name:
-                        type: string
-                      origin_country:
-                        type: string
-                production_countries:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      iso_3166_1:
-                        type: string
-                      name:
-                        type: string
-                release_date:
-                  type: string
-                revenue:
-                  type: integer
-                runtime:
-                  type: integer
-                spoken_languages:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      english_name:
-                        type: string
-                      iso_639_1:
-                        type: string
-                      name:
-                        type: string
-                status:
-                  type: string
-                tagline:
-                  type: string
-                title:
-                  type: string
-                video:
-                  type: boolean
-                vote_average:
-                  type: number
-                vote_count:
-                  type: integer
-              x-examples:
-                Example 1:
-                  adult: false
-                  backdrop_path: /hZkgoQYus5vegHoetLkCJzb17zJ.jpg
-                  belongs_to_collection: null
-                  budget: 63000000
-                  genres:
-                    - id: 18
-                      name: Drama
-                    - id: 53
-                      name: Thriller
-                    - id: 35
-                      name: Comedy
-                  homepage: 'http://www.foxmovies.com/movies/fight-club'
-                  id: 550
-                  imdb_id: tt0137523
-                  original_language: en
-                  original_title: Fight Club
-                  overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
-                  popularity: 69.328
-                  poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                  production_companies:
-                    - id: 25
-                      logo_path: /qZCc1lty5FzX30aOCVRBLzaVmcp.png
-                      name: 20th Century Fox
-                      origin_country: US
-                    - id: 508
-                      logo_path: /7cxRWzi4LsVm4Utfpr1hfARNurT.png
-                      name: Regency Enterprises
-                      origin_country: US
-                    - id: 711
-                      logo_path: /tEiIH5QesdheJmDAqQwvtN60727.png
-                      name: Fox 2000 Pictures
-                      origin_country: US
-                    - id: 4700
-                      logo_path: /A32wmjrs9Psf4zw0uaixF0GXfxq.png
-                      name: The Linson Company
-                      origin_country: US
-                    - id: 20555
-                      logo_path: /hD8yEGUBlHOcfHYbujp71vD8gZp.png
-                      name: Taurus Film
-                      origin_country: DE
-                    - id: 54051
-                      logo_path: null
-                      name: Atman Entertainment
-                      origin_country: ''
-                    - id: 54052
-                      logo_path: null
-                      name: Knickerbocker Films
-                      origin_country: US
-                  production_countries:
-                    - iso_3166_1: US
-                      name: United States of America
-                  release_date: '1999-10-15'
-                  revenue: 100853753
-                  runtime: 139
-                  spoken_languages:
-                    - english_name: English
-                      iso_639_1: en
-                      name: English
-                  status: Released
-                  tagline: Mischief. Mayhem. Soap.
-                  title: Fight Club
-                  video: false
-                  vote_average: 8.4
-                  vote_count: 25876
-            examples:
-              Example 1:
-                value:
-                  adult: true
-                  backdrop_path: string
-                  belongs_to_collection: string
-                  budget: 0
-                  genres:
-                    - id: 0
-                      name: string
-                  homepage: string
-                  id: 0
-                  imdb_id: string
-                  original_language: string
-                  original_title: string
-                  overview: string
-                  popularity: 0
-                  poster_path: string
-                  production_companies:
-                    - id: 0
-                      logo_path: string
-                      name: string
-                      origin_country: string
-                  production_countries:
-                    - iso_3166_1: string
-                      name: string
-                  release_date: string
-                  revenue: 0
-                  runtime: 0
-                  spoken_languages:
-                    - english_name: string
-                      iso_639_1: string
-                      name: string
-                  status: string
-                  tagline: string
-                  title: string
-                  video: true
-                  vote_average: 0
-                  vote_count: 0
-      description: 'As a user, I should be able to view the details of a movie'
+      description: "As a user, I should be able to view the details of a movie"
     parameters: []
-  /movies /search:
+  /movies/search:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: search movies
+      tags:
+        - movies
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -1269,21 +612,21 @@ paths:
                       title: Fight Club
                       overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
                       poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                      vote_average: '8.4'
-                      release_date: '1999-10-15T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:40.000000Z'
-                      updated_at: '2023-02-25T14:28:40.000000Z'
+                      vote_average: "8.4"
+                      release_date: "1999-10-15T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:40.000000Z"
+                      updated_at: "2023-02-25T14:28:40.000000Z"
                     - id: 3
                       media_id: 551
                       user_id: 1
                       popularity: 18.19
                       title: The Poseidon Adventure
-                      overview: 'When their ocean liner capsizes, a group of passengers struggle to survive and escape.'
+                      overview: "When their ocean liner capsizes, a group of passengers struggle to survive and escape."
                       poster_path: /6RGiA5BfhelU9zoD0b1GAG4GWWf.jpg
-                      vote_average: '7.1'
-                      release_date: '1972-12-13T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:47.000000Z'
-                      updated_at: '2023-02-25T14:28:47.000000Z'
+                      vote_average: "7.1"
+                      release_date: "1972-12-13T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:47.000000Z"
+                      updated_at: "2023-02-25T14:28:47.000000Z"
               examples:
                 Example 1:
                   value:
@@ -1299,409 +642,15 @@ paths:
                       created_at: string
                       updated_at: string
       operationId: get-movie-videos
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                page:
-                  type: integer
-                results:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      adult:
-                        type: boolean
-                      backdrop_path:
-                        type: string
-                      genre_ids:
-                        type: array
-                        items:
-                          type: integer
-                      id:
-                        type: integer
-                      original_language:
-                        type: string
-                      original_title:
-                        type: string
-                      overview:
-                        type: string
-                      popularity:
-                        type: number
-                      poster_path:
-                        type: string
-                      release_date:
-                        type: string
-                      title:
-                        type: string
-                      video:
-                        type: boolean
-                      vote_average:
-                        type: number
-                      vote_count:
-                        type: integer
-                total_pages:
-                  type: integer
-                total_results:
-                  type: integer
-              x-examples:
-                Example 1:
-                  page: 1
-                  results:
-                    - adult: false
-                      backdrop_path: /edOt2jNyCbb8SQSvulD2sRRJhmA.jpg
-                      genre_ids:
-                        - 28
-                        - 80
-                        - 53
-                      id: 873126
-                      original_language: it
-                      original_title: Il mio nome è vendetta
-                      overview: 'After old enemies kill his family, a former mafia enforcer and his feisty daughter flee to Milan, where they hide out while plotting their revenge.'
-                      popularity: 324.682
-                      poster_path: /7l3war94J4tRyWUiLAGokr3ViF2.jpg
-                      release_date: '2022-11-30'
-                      title: My Name Is Vendetta
-                      video: false
-                      vote_average: 6.9
-                      vote_count: 395
-                    - adult: false
-                      backdrop_path: /dIWwZW7dJJtqC6CgWzYkNVKIUm8.jpg
-                      genre_ids:
-                        - 10749
-                        - 16
-                        - 18
-                      id: 372058
-                      original_language: ja
-                      original_title: 君の名は。
-                      overview: 'High schoolers Mitsuha and Taki are complete strangers living separate lives. But one night, they suddenly switch places. Mitsuha wakes up in Taki’s body, and he in hers. This bizarre occurrence continues to happen randomly, and the two must adjust their lives around each other.'
-                      popularity: 98.025
-                      poster_path: /q719jXXEzOoYaps6babgKnONONX.jpg
-                      release_date: '2016-08-26'
-                      title: Your Name.
-                      video: false
-                      vote_average: 8.521
-                      vote_count: 9538
-                    - adult: false
-                      backdrop_path: /1U5zz2Jvt2L7hXHf1ZN1n74Zx8j.jpg
-                      genre_ids:
-                        - 18
-                        - 53
-                      id: 769636
-                      original_language: es
-                      original_title: Código Emperador
-                      overview: 'Juan, a secret service agent, approaches Wendy, a young Filipina who works as a maid for a suspicious couple.'
-                      popularity: 51.23
-                      poster_path: /8VjVLMiPm598Kg6XmKk5m1fz0p7.jpg
-                      release_date: '2022-03-18'
-                      title: 'Code Name: Emperor'
-                      video: false
-                      vote_average: 5.9
-                      vote_count: 127
-                    - adult: false
-                      backdrop_path: /oD9aIL2vuEB0I811qyjRtM0m1Fa.jpg
-                      genre_ids:
-                        - 14
-                        - 53
-                        - 9648
-                      id: 16140
-                      original_language: ja
-                      original_title: デスノート the Last name
-                      overview: 'In the second installment of the Death Note film franchise, Light Yagami meets a second Kira and faithful follower Misa Amane and her Shinigami named Rem. Light attempts to defeat L along with Teru Mikami (a Kira follower) and Kiyomi Takada (another Kira follower) but in the end will Light win? or will a Shinigami named Ryuk make all the difference in Light''s victory or his ultimate death?'
-                      popularity: 16.316
-                      poster_path: /wd0Ri3v8tyRdWuA5PRS2rODOlIa.jpg
-                      release_date: '2006-10-28'
-                      title: 'Death Note: The Last Name'
-                      video: false
-                      vote_average: 6.958
-                      vote_count: 392
-                    - adult: false
-                      backdrop_path: /dl4CGoRgzTMNXcVX56zc13RfNJm.jpg
-                      genre_ids:
-                        - 28
-                        - 16
-                        - 14
-                      id: 843243
-                      original_language: ja
-                      original_title: 劇場版 Fate/kaleid liner プリズマ☆イリヤ Licht 名前の無い少女
-                      overview: 'The Ainsworth family''s goal is to save the world from evil, but their success depends on the great sacrifice Magical Girl Miyu makes for them. Her brother Shirou, however, is not willing to let the family have his sister without a fight. That’s why he doggedly searches for a way to save not only the world but also Miyu...'
-                      popularity: 41.376
-                      poster_path: /1HLRRAvUgUNweE5wscnB2kcZnXh.jpg
-                      release_date: '2021-08-27'
-                      title: 'Fate/kaleid liner Prisma☆Illya: Licht Nameless Girl'
-                      video: false
-                      vote_average: 5.5
-                      vote_count: 2
-                    - adult: false
-                      backdrop_path: /occ3EfIpSilyGVh7B45IFwclgqz.jpg
-                      genre_ids:
-                        - 18
-                      id: 1006817
-                      original_language: de
-                      original_title: Knochen und Namen
-                      overview: 'Boris and Jonathan have been a couple for many years. But their relationship has reached a point where they might as well spend their evenings together separately: One lies in bed reading, the other works at a desk in the next room. While actor Boris digs deeper into rehearsals for a new film with an ambitious director and begins to mix real and fictional characters, Jonathan tries to redefine his voice as a writer. Ghosting through these days of wrestling with distance, closeness, trust, desire and fear of loss is Jonathans'' young niece Josie, who is trying to deal with the approaching end of her childhood in her own idiosyncratic way. BONES AND NAMES, the feature debut of Fabian Stumm, portrays people searching for their place in life in different ways. A sensitive and humorous reflection on the dissonances in relationships that both connect and distance us from each other.'
-                      popularity: 11.168
-                      poster_path: /dqnisgxxVUxE3zLbUKhMOyCNoQp.jpg
-                      release_date: '2023-02-22'
-                      title: Bones and Names
-                      video: false
-                      vote_average: 0
-                      vote_count: 0
-                    - adult: false
-                      backdrop_path: /q48zEA8ytzon2YBubTHjZFOypBy.jpg
-                      genre_ids:
-                        - 16
-                        - 28
-                        - 14
-                      id: 550093
-                      original_language: ja
-                      original_title: K Seven Stories Circle Vision ~Nameless Song~
-                      overview: ''
-                      popularity: 10.258
-                      poster_path: /lCrvNRsym0JprlkLwXinmgxD7bt.jpg
-                      release_date: '2018-12-01'
-                      title: 'K: Seven Stories Movie 6 - Circle Vision - Nameless Song'
-                      video: false
-                      vote_average: 6.5
-                      vote_count: 2
-                    - adult: false
-                      backdrop_path: /4AuJa4AoebEYC49BTJ1bwZv0Ey9.jpg
-                      genre_ids:
-                        - 10751
-                        - 10749
-                      id: 583833
-                      original_language: ru
-                      original_title: Пальма
-                      overview: 'The film is inspired by an incredible story of a shepherd dog named Palm who was inadvertently left in the airport by her owner. She befriends nine-year old Nicholas whose mother dies leaving him with a father he barely knows - a pilot who finds the dog at the airport. It''s a story of amazing adventures, true friendship and unconditional love.'
-                      popularity: 25.014
-                      poster_path: /3S3Mz9OD5SUwKy7kaqXcWAKUGXY.jpg
-                      release_date: '2021-03-18'
-                      title: A Dog Named Palma
-                      video: false
-                      vote_average: 8.3
-                      vote_count: 147
-                    - adult: false
-                      backdrop_path: /ttkibtcAjoilW1PbTIFy9U9YOdB.jpg
-                      genre_ids:
-                        - 53
-                        - 28
-                      id: 916719
-                      original_language: en
-                      original_title: Code Name Banshee
-                      overview: 'Caleb, a former government assassin in hiding, who resurfaces when his protégé, the equally deadly killer known as Banshee, discovers a bounty has been placed on Caleb''s head.'
-                      popularity: 99.108
-                      poster_path: /lxkvlIrvExeHGiPk7bdji2xm3vs.jpg
-                      release_date: '2022-07-01'
-                      title: Code Name Banshee
-                      video: false
-                      vote_average: 5.2
-                      vote_count: 58
-                    - adult: false
-                      backdrop_path: /jSpfsZtEU1PP3zPrXRBMmya4a4K.jpg
-                      genre_ids:
-                        - 35
-                        - 37
-                      id: 11829
-                      original_language: it
-                      original_title: ...continuavano a chiamarlo Trinità
-                      overview: The two brothers Trinity and Bambino are exchanged by two federal agents and take advantage of the situation to steal a huge booty hidden in a monastery by a gang of outlaws.
-                      popularity: 20.729
-                      poster_path: /oRd5Zb2MJEvBBxvyh3gVe6d4cAl.jpg
-                      release_date: '1971-10-21'
-                      title: Trinity Is Still My Name
-                      video: false
-                      vote_average: 7.4
-                      vote_count: 769
-                    - adult: false
-                      backdrop_path: /7d1yr20hQI3opmk9410o3111WNl.jpg
-                      genre_ids:
-                        - 35
-                        - 37
-                      id: 9474
-                      original_language: it
-                      original_title: Il mio nome è Nessuno
-                      overview: 'Jack Beauregard, an ageing gunman of the Old West, only wants to retire in peace and move to Europe. But a young gunfighter, known as "Nobody", who idolizes Beauregard, wants him to go out in a blaze of glory. So he arranges for Jack to face the 150-man gang known as The Wild Bunch and earn his place in history.'
-                      popularity: 18.398
-                      poster_path: /tJQEVI1p00Jh9TUgNEI623iu7ST.jpg
-                      release_date: '1973-12-13'
-                      title: My Name Is Nobody
-                      video: false
-                      vote_average: 7.3
-                      vote_count: 796
-                    - adult: false
-                      backdrop_path: /gM1WB9sbqTdBri5XYtxPz0ectr.jpg
-                      genre_ids:
-                        - 10749
-                        - 36
-                        - 18
-                      id: 719410
-                      original_language: zh
-                      original_title: 刻在你心底的名字
-                      overview: 'In 1987, as martial law ends in Taiwan, Jia-han and Birdy fall in love amid family pressure, homophobia and social stigma.'
-                      popularity: 14.381
-                      poster_path: /m3y8B4beaYjGltS7G2zltURfaUD.jpg
-                      release_date: '2020-09-30'
-                      title: Your Name Engraved Herein
-                      video: false
-                      vote_average: 8.018
-                      vote_count: 171
-                    - adult: false
-                      backdrop_path: /qRwSY7MQcMY099gwtCaBMTqvNlQ.jpg
-                      genre_ids:
-                        - 18
-                        - 99
-                      id: 1081021
-                      original_language: en
-                      original_title: Come Out in Jesus Name
-                      overview: 'Following a startling chain of events, the most controversial pastor in America, Greg Locke, took a 180-degree turn from his mainstream religious traditions and led his church to the brink of revival. He and a diverse group of unconventional preachers then began to spark the most important awakening in the history of the Christian Church — through the most unlikely means – by casting out demons. This fiery film documents the beginnings of their journey. “Come Out In Jesus Name” will be followed by a live simulcast event where Pastor Locke and his fellow demon slayers will lead a supernatural mass deliverance... in Jesus name.'
-                      popularity: 6.997
-                      poster_path: /6477EtUdjnPt48CTWF6P6MDTYRX.jpg
-                      release_date: '2023-03-13'
-                      title: Come Out in Jesus Name
-                      video: false
-                      vote_average: 0
-                      vote_count: 0
-                    - adult: false
-                      backdrop_path: /zvOJawrnmgK0sL293mOXOdLvTXQ.jpg
-                      genre_ids:
-                        - 10749
-                        - 18
-                      id: 398818
-                      original_language: en
-                      original_title: Call Me by Your Name
-                      overview: 'In 1980s Italy, a relationship begins between seventeen-year-old teenage Elio and the older adult man hired as his father''s research assistant.'
-                      popularity: 56.661
-                      poster_path: /mZ4gBdfkhP9tvLH1DO4m4HYtiyi.jpg
-                      release_date: '2017-09-01'
-                      title: Call Me by Your Name
-                      video: false
-                      vote_average: 8.2
-                      vote_count: 10941
-                    - adult: false
-                      backdrop_path: /ibk7vtPsirbk0wIJEmHLF0vwcyi.jpg
-                      genre_ids:
-                        - 80
-                        - 53
-                      id: 89501
-                      original_language: ko
-                      original_title: 범죄와의 전쟁
-                      overview: A corrupt customs official joins forces with a vicious gangster to form the most powerful crime partnership in Busan.
-                      popularity: 10.884
-                      poster_path: /3ppxP6yFoKxkA3jQkDdv3E9u1tc.jpg
-                      release_date: '2012-02-02'
-                      title: Nameless Gangster
-                      video: false
-                      vote_average: 6.9
-                      vote_count: 139
-                    - adult: false
-                      backdrop_path: /rSWv4coph16vM5yOaOFXE1Y6qgY.jpg
-                      genre_ids:
-                        - 18
-                        - 80
-                      id: 381262
-                      original_language: fr
-                      original_title: Au nom de ma fille
-                      overview: "In 1982, André Bamberski learns about the death of his 14 year-old daughter, Kalinka, while she was on vacation with her mother and stepfather in Germany. Convinced that Kalinka’s death was not an accident, Bamberski begins to investigate. A botched autopsy report raises his suspicions and leads him to accuse Kalinka’s stepfather, Dr Dieter Krombach, as the murderer.\r Unable to indict Krombach in Germany, Bamberski attempts to take the trial to France, where he will dedicate his life to Kalinka’s justice and the imprisonment of Krombach."
-                      popularity: 7.654
-                      poster_path: /lVYfYQBBvs6yb7pChIBJ6R4vsrK.jpg
-                      release_date: '2016-03-16'
-                      title: In Her Name
-                      video: false
-                      vote_average: 6.7
-                      vote_count: 273
-                    - adult: false
-                      backdrop_path: /77ts1WFashRqO6oLShWgxIKWt7y.jpg
-                      genre_ids:
-                        - 35
-                        - 18
-                      id: 112198
-                      original_language: fr
-                      original_title: Le Prénom
-                      overview: 'Vincent, a wealthy real estate agent, is invited to dinner by his sister Elizabeth and her husband Peter, both professors in Paris. Claude, a childhood friend and trombonist in a symphony orchestra, is also present. Vincent brings news from the prenatal examination of his and his wife Anna''s unborn son. The name chosen by the soon-to-be parents strongly offends the others for many reasons. The dispute between the guests quickly escalates and before long the resurgence of old grudges and hidden secrets is unavoidable ...'
-                      popularity: 10.223
-                      poster_path: /jMN3qpIDQWYUthezDzYacr99hXo.jpg
-                      release_date: '2012-04-25'
-                      title: What's in a Name
-                      video: false
-                      vote_average: 7.309
-                      vote_count: 1464
-                    - adult: false
-                      backdrop_path: /eMCLDT7IIwJZmKAB3bxFeeROlZM.jpg
-                      genre_ids:
-                        - 35
-                        - 80
-                        - 18
-                        - 10749
-                        - 10402
-                      id: 32689
-                      original_language: fr
-                      original_title: Prénom Carmen
-                      overview: 'The protagonist is Carmen X, a female member of a terrorist gang. She asks her uncle Jean, a washed-up film director if she can borrow his beachside house to make a film with some friends, but they are in fact planning to rob a bank. During the robbery she falls in love with a security guard. The film intercuts between Carmen''s escape with the guard, her uncle''s attempt to make a comeback film, and a string quartet attempting to perform Beethoven.'
-                      popularity: 7.185
-                      poster_path: /natncsjLzxamty1biZSbuZjsXh4.jpg
-                      release_date: '1983-09-04'
-                      title: 'First Name: Carmen'
-                      video: false
-                      vote_average: 6.2
-                      vote_count: 73
-                    - adult: false
-                      backdrop_path: /yBLUED5DS8bJSnVcp50oXvy97xi.jpg
-                      genre_ids:
-                        - 35
-                      id: 999594
-                      original_language: ru
-                      original_title: Непослушник 2
-                      overview: The second part of a comedy about a blogger who has to hide within the walls of a monastery from punishment on charges of insulting the feelings of believers.
-                      popularity: 6.021
-                      poster_path: /59kJKOUXwHph2vQ4DuaW8fDeBXM.jpg
-                      release_date: '2022-12-15'
-                      title: In the Name of a Prank 2
-                      video: false
-                      vote_average: 8
-                      vote_count: 2
-                    - adult: false
-                      backdrop_path: null
-                      genre_ids:
-                        - 18
-                        - 53
-                      id: 435983
-                      original_language: en
-                      original_title: She Has A Name
-                      overview: 'Jason, an American lawyer, poses as a john to build a legal case against a pimp trafficking girls to Bangkok. Can he win the trust of a young prostitute known only as Number 18 and convince her to risk her life to testify against her pimp?'
-                      popularity: 1.741
-                      poster_path: /ktk8kNuc9ftAEfZZ96HEVFziy21.jpg
-                      release_date: '2016-12-02'
-                      title: She Has a Name
-                      video: false
-                      vote_average: 10
-                      vote_count: 1
-                  total_pages: 63
-                  total_results: 1247
-            examples:
-              Example 1:
-                value:
-                  id: 0
-                  results:
-                    - iso_639_1: string
-                      iso_3166_1: string
-                      name: string
-                      key: string
-                      site: string
-                      size: 0
-                      type: string
-                      official: true
-                      published_at: string
-                      id: 1
-      description: 'As a user, I should be able to search for movies'
+      description: "As a user, I should be able to search for movies"
     parameters: []
   /movies/id/videos:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: movie videos
+      tags:
+        - movies
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1741,23 +690,23 @@ paths:
                     results:
                       - iso_639_1: en
                         iso_3166_1: US
-                        name: 'Fight Club (1999) Trailer - Starring Brad Pitt, Edward Norton, Helena Bonham Carter'
+                        name: "Fight Club (1999) Trailer - Starring Brad Pitt, Edward Norton, Helena Bonham Carter"
                         key: O-b2VfmmbyA
                         site: YouTube
                         size: 720
                         type: Trailer
                         official: false
-                        published_at: '2016-03-05T02:03:14.000Z'
+                        published_at: "2016-03-05T02:03:14.000Z"
                         id: 639d5326be6d88007f170f44
                       - iso_639_1: en
                         iso_3166_1: US
-                        name: '#TBT Trailer'
+                        name: "#TBT Trailer"
                         key: BdJKm16Co6M
                         site: YouTube
                         size: 1080
                         type: Trailer
                         official: true
-                        published_at: '2014-10-02T19:20:22.000Z'
+                        published_at: "2014-10-02T19:20:22.000Z"
                         id: 5c9294240e0a267cd516835f
               examples:
                 Example 1:
@@ -1775,13 +724,14 @@ paths:
                         published_at: string
                         id: string
       operationId: get-movies-id-videos
-      description: 'As a user, I should be able to watch the trailer of a movie'
+      description: "As a user, I should be able to watch the trailer of a movie"
   /tv:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: tvs list
+      tags:
+        - TV
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -1821,21 +771,21 @@ paths:
                       title: Fight Club
                       overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
                       poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                      vote_average: '8.4'
-                      release_date: '1999-10-15T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:40.000000Z'
-                      updated_at: '2023-02-25T14:28:40.000000Z'
+                      vote_average: "8.4"
+                      release_date: "1999-10-15T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:40.000000Z"
+                      updated_at: "2023-02-25T14:28:40.000000Z"
                     - id: 3
                       media_id: 551
                       user_id: 1
                       popularity: 18.19
                       title: The Poseidon Adventure
-                      overview: 'When their ocean liner capsizes, a group of passengers struggle to survive and escape.'
+                      overview: "When their ocean liner capsizes, a group of passengers struggle to survive and escape."
                       poster_path: /6RGiA5BfhelU9zoD0b1GAG4GWWf.jpg
-                      vote_average: '7.1'
-                      release_date: '1972-12-13T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:47.000000Z'
-                      updated_at: '2023-02-25T14:28:47.000000Z'
+                      vote_average: "7.1"
+                      release_date: "1972-12-13T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:47.000000Z"
+                      updated_at: "2023-02-25T14:28:47.000000Z"
               examples:
                 Example 1:
                   value:
@@ -1851,249 +801,6 @@ paths:
                       created_at: string
                       updated_at: string
       operationId: get-tv
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                page:
-                  type: string
-                results:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      adult:
-                        type: boolean
-                      backdrop_path:
-                        type: string
-                      genre_ids:
-                        type: array
-                        items:
-                          type: integer
-                      id:
-                        type: integer
-                      original_language:
-                        type: string
-                      original_title:
-                        type: string
-                      overview:
-                        type: string
-                      popularity:
-                        type: number
-                      poster_path:
-                        type: string
-                      release_date:
-                        type: string
-                      title:
-                        type: string
-                      video:
-                        type: boolean
-                      vote_average:
-                        type: number
-                      vote_count:
-                        type: integer
-                total_pages:
-                  type: integer
-                total_results:
-                  type: integer
-              x-examples:
-                Example 1:
-                  page: '1'
-                  results:
-                    - adult: false
-                      backdrop_path: /xDMIl84Qo5Tsu62c9DGWhmPI67A.jpg
-                      genre_ids:
-                        - 28
-                        - 12
-                        - 878
-                      id: 505642
-                      original_language: en
-                      original_title: 'Black Panther: Wakanda Forever'
-                      overview: 'Queen Ramonda, Shuri, M’Baku, Okoye and the Dora Milaje fight to protect their nation from intervening world powers in the wake of King T’Challa’s death. As the Wakandans strive to embrace their next chapter, the heroes must band together with the help of War Dog Nakia and Everett Ross and forge a new path for the kingdom of Wakanda.'
-                      popularity: 3095.36
-                      poster_path: /sv1xJUazXeYqALzczSZ3O6nkH75.jpg
-                      release_date: '2022-11-09'
-                      title: 'Black Panther: Wakanda Forever'
-                      video: false
-                      vote_average: 7.4
-                      vote_count: 3494
-                    - adult: false
-                      backdrop_path: /9Rq14Eyrf7Tu1xk0Pl7VcNbNh1n.jpg
-                      genre_ids:
-                        - 28
-                        - 12
-                        - 53
-                      id: 646389
-                      original_language: en
-                      original_title: Plane
-                      overview: 'After a heroic job of successfully landing his storm-damaged aircraft in a war zone, a fearless pilot finds himself between the agendas of multiple militias planning to take the plane and its passengers hostage.'
-                      popularity: 2643.784
-                      poster_path: /qi9r5xBgcc9KTxlOLjssEbDgO0J.jpg
-                      release_date: '2023-01-12'
-                      title: Plane
-                      video: false
-                      vote_average: 6.8
-                      vote_count: 595
-                    - adult: false
-                      backdrop_path: /b1Y8SUb12gPHCSSSNlbX4nB3IKy.jpg
-                      genre_ids:
-                        - 16
-                        - 12
-                        - 35
-                        - 10751
-                        - 14
-                      id: 315162
-                      original_language: en
-                      original_title: 'Puss in Boots: The Last Wish'
-                      overview: 'Puss in Boots discovers that his passion for adventure has taken its toll: He has burned through eight of his nine lives, leaving him with only one life left. Puss sets out on an epic journey to find the mythical Last Wish and restore his nine lives.'
-                      popularity: 2503.803
-                      poster_path: /kuf6dutpsT0vSVehic3EZIqkOBt.jpg
-                      release_date: '2022-12-07'
-                      title: 'Puss in Boots: The Last Wish'
-                      video: false
-                      vote_average: 8.5
-                      vote_count: 3999
-                    - adult: false
-                      backdrop_path: /8YFL5QQVPy3AgrEQxNYVSgiPEbe.jpg
-                      genre_ids:
-                        - 12
-                        - 878
-                        - 35
-                      id: 640146
-                      original_language: en
-                      original_title: 'Ant-Man and the Wasp: Quantumania'
-                      overview: 'Super-Hero partners Scott Lang and Hope van Dyne, along with with Hope''s parents Janet van Dyne and Hank Pym, and Scott''s daughter Cassie Lang, find themselves exploring the Quantum Realm, interacting with strange new creatures and embarking on an adventure that will push them beyond the limits of what they thought possible.'
-                      popularity: 2327.66
-                      poster_path: /ngl2FKBlU4fhbdsrtdom9LVLBXw.jpg
-                      release_date: '2023-02-10'
-                      title: 'Ant-Man and the Wasp: Quantumania'
-                      video: false
-                      vote_average: 6.5
-                      vote_count: 669
-                    - adult: false
-                      backdrop_path: /zGoZB4CboMzY1z4G3nU6BWnMDB2.jpg
-                      genre_ids:
-                        - 28
-                        - 10749
-                        - 35
-                      id: 758009
-                      original_language: en
-                      original_title: Shotgun Wedding
-                      overview: 'Darcy and Tom gather their families for the ultimate destination wedding but when the entire party is taken hostage, “’Til Death Do Us Part” takes on a whole new meaning in this hilarious, adrenaline-fueled adventure as Darcy and Tom must save their loved ones—if they don’t kill each other first.'
-                      popularity: 1481.616
-                      poster_path: /t79ozwWnwekO0ADIzsFP1E5SkvR.jpg
-                      release_date: '2022-12-28'
-                      title: Shotgun Wedding
-                      video: false
-                      vote_average: 6.4
-                      vote_count: 531
-                    - adult: false
-                      backdrop_path: /otOtC45BDzFW7nuxnWHMmnYsicK.jpg
-                      genre_ids:
-                        - 878
-                        - 27
-                        - 35
-                      id: 536554
-                      original_language: en
-                      original_title: M3GAN
-                      overview: 'A brilliant toy company roboticist uses artificial intelligence to develop M3GAN, a life-like doll programmed to emotionally bond with her newly orphaned niece. But when the doll''s programming works too well, she becomes overprotective of her new friend with terrifying results.'
-                      popularity: 1275.348
-                      poster_path: /d9nBoowhjiiYc4FBNtQkPY7c11H.jpg
-                      release_date: '2022-12-28'
-                      title: M3GAN
-                      video: false
-                      vote_average: 7.5
-                      vote_count: 1747
-                    - adult: false
-                      backdrop_path: /s16H6tpK2utvwDtzZ8Qy4qm5Emw.jpg
-                      genre_ids:
-                        - 878
-                        - 12
-                        - 28
-                      id: 76600
-                      original_language: en
-                      original_title: 'Avatar: The Way of Water'
-                      overview: 'Set more than a decade after the events of the first film, learn the story of the Sully family (Jake, Neytiri, and their kids), the trouble that follows them, the lengths they go to keep each other safe, the battles they fight to stay alive, and the tragedies they endure.'
-                      popularity: 1129.079
-                      poster_path: /t6HIqrRAclMCA60NsSmeqe9RmNV.jpg
-                      release_date: '2022-12-14'
-                      title: 'Avatar: The Way of Water'
-                      video: false
-                      vote_average: 7.7
-                      vote_count: 5431
-                    - adult: false
-                      backdrop_path: /cL0cdccOMzM508ODsWPfHVMMAzo.jpg
-                      genre_ids:
-                        - 28
-                      id: 267805
-                      original_language: en
-                      original_title: There Are No Saints
-                      overview: 'A man is imprisoned for a crime he didn''t commit. When his wife is murdered and his son kidnapped and taken to Mexico, he devises an elaborate and dangerous plan to rescue his son and avenge the murder.'
-                      popularity: 1065.378
-                      poster_path: /fcOTYArjKuAgufwHoTvx8w9UKCv.jpg
-                      release_date: '2022-05-27'
-                      title: There Are No Saints
-                      video: false
-                      vote_average: 5.8
-                      vote_count: 47
-                    - adult: false
-                      backdrop_path: /r7Dfg9aRZ78gJsmDlCirIIlNH3d.jpg
-                      genre_ids:
-                        - 18
-                      id: 785084
-                      original_language: en
-                      original_title: The Whale
-                      overview: A reclusive English teacher suffering from severe obesity attempts to reconnect with his estranged teenage daughter for one last chance at redemption.
-                      popularity: 1078.306
-                      poster_path: /oOD0V67bqsEE4Vnwav3CgxMNtWp.jpg
-                      release_date: '2022-12-09'
-                      title: The Whale
-                      video: false
-                      vote_average: 7.8
-                      vote_count: 331
-                    - adult: false
-                      backdrop_path: /zWDMQX0sPaW2u0N2pJaYA8bVVaJ.jpg
-                      genre_ids:
-                        - 27
-                        - 9648
-                        - 53
-                      id: 631842
-                      original_language: en
-                      original_title: Knock at the Cabin
-                      overview: 'While vacationing at a remote cabin, a young girl and her two fathers are taken hostage by four armed strangers who demand that the family make an unthinkable choice to avert the apocalypse. With limited access to the outside world, the family must decide what they believe before all is lost.'
-                      popularity: 855.793
-                      poster_path: /dm06L9pxDOL9jNSK4Cb6y139rrG.jpg
-                      release_date: '2023-02-01'
-                      title: Knock at the Cabin
-                      video: false
-                      vote_average: 6.6
-                      vote_count: 448
-                  total_pages: 74487
-                  total_results: 744870
-            examples:
-              Example 1:
-                value:
-                  page: string
-                  results:
-                    - adult: true
-                      backdrop_path: string
-                      genre_ids:
-                        - 0
-                      id: 0
-                      original_language: string
-                      original_title: string
-                      overview: string
-                      popularity: 0
-                      poster_path: string
-                      release_date: string
-                      title: string
-                      video: true
-                      vote_average: 0
-                      vote_count: 0
-                  total_pages: 0
-                  total_results: 0
       parameters:
         - schema:
             type: string
@@ -2123,18 +830,16 @@ paths:
           in: query
           name: with_watch_monetization_types
       description: |-
-        As a user, I should be able to view the list ofseries on different
-        page
-
-        As a user, I should be able to view, in the series all the
-        movies available in batches of 10
+        As a user, I should be able to view the list ofseries on different page
+        As a user, I should be able to view, in the series all the movies available in batches of 10
     parameters: []
   /tv/top-rated:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: get top rated series
+      tags:
+        - TV
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -2174,21 +879,21 @@ paths:
                       title: Fight Club
                       overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
                       poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                      vote_average: '8.4'
-                      release_date: '1999-10-15T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:40.000000Z'
-                      updated_at: '2023-02-25T14:28:40.000000Z'
+                      vote_average: "8.4"
+                      release_date: "1999-10-15T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:40.000000Z"
+                      updated_at: "2023-02-25T14:28:40.000000Z"
                     - id: 3
                       media_id: 551
                       user_id: 1
                       popularity: 18.19
                       title: The Poseidon Adventure
-                      overview: 'When their ocean liner capsizes, a group of passengers struggle to survive and escape.'
+                      overview: "When their ocean liner capsizes, a group of passengers struggle to survive and escape."
                       poster_path: /6RGiA5BfhelU9zoD0b1GAG4GWWf.jpg
-                      vote_average: '7.1'
-                      release_date: '1972-12-13T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:47.000000Z'
-                      updated_at: '2023-02-25T14:28:47.000000Z'
+                      vote_average: "7.1"
+                      release_date: "1972-12-13T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:47.000000Z"
+                      updated_at: "2023-02-25T14:28:47.000000Z"
               examples:
                 Example 1:
                   value:
@@ -2204,156 +909,17 @@ paths:
                       created_at: string
                       updated_at: string
       operationId: get-tv-detail
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  adult:
-                    type: boolean
-                  backdrop_path:
-                    type: string
-                  genre_ids:
-                    type: array
-                    items:
-                      type: integer
-                  id:
-                    type: integer
-                  original_language:
-                    type: string
-                  original_title:
-                    type: string
-                  overview:
-                    type: string
-                  popularity:
-                    type: number
-                  poster_path:
-                    type: string
-                  release_date:
-                    type: string
-                  title:
-                    type: string
-                  video:
-                    type: boolean
-                  vote_average:
-                    type: number
-                  vote_count:
-                    type: integer
-              x-examples:
-                Example 1:
-                  - adult: false
-                    backdrop_path: /ejniJnlOdtSgtbh8D7u2RxT6Uli.jpg
-                    genre_ids:
-                      - 35
-                      - 14
-                    id: 772071
-                    original_language: es
-                    original_title: Cuando Sea Joven
-                    overview: '70-year-old Malena gets a second chance at life when she magically turns into her 22-year-old self. Now, posing as "Maria" to hide her true identity, she becomes the lead singer of her grandson''s band and tries to recover her dream of singing, which she had to give up at some point.'
-                    popularity: 51.977
-                    poster_path: /6gIJuFHh5Lj4dNaPG3TzIMl7L68.jpg
-                    release_date: '2022-09-14'
-                    title: Cuando Sea Joven
-                    video: false
-                    vote_average: 8.7
-                    vote_count: 205
-                  - adult: false
-                    backdrop_path: /tmU7GeKVybMWFButWEGl2M4GeiP.jpg
-                    genre_ids:
-                      - 18
-                      - 80
-                    id: 238
-                    original_language: en
-                    original_title: The Godfather
-                    overview: 'Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family. When organized crime family patriarch, Vito Corleone barely survives an attempt on his life, his youngest son, Michael steps in to take care of the would-be killers, launching a campaign of bloody revenge.'
-                    popularity: 87.037
-                    poster_path: /3bhkrj58Vtu7enYsRolD1fZdja1.jpg
-                    release_date: '1972-03-14'
-                    title: The Godfather
-                    video: false
-                    vote_average: 8.7
-                    vote_count: 17505
-                  - adult: false
-                    backdrop_path: /wPU78OPN4BYEgWYdXyg0phMee64.jpg
-                    genre_ids:
-                      - 18
-                      - 80
-                    id: 278
-                    original_language: en
-                    original_title: The Shawshank Redemption
-                    overview: 'Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope.'
-                    popularity: 88.445
-                    poster_path: /hBcY0fE9pfXzvVaY4GKarweriG2.jpg
-                    release_date: '1994-09-23'
-                    title: The Shawshank Redemption
-                    video: false
-                    vote_average: 8.7
-                    vote_count: 23344
-                  - adult: false
-                    backdrop_path: /wxaBkuqVIgImjRHEMJoxL9Lq6i8.jpg
-                    genre_ids:
-                      - 16
-                      - 10751
-                      - 12
-                      - 14
-                    id: 995133
-                    original_language: en
-                    original_title: 'The Boy, the Mole, the Fox and the Horse'
-                    overview: 'The unlikely friendship of a boy, a mole, a fox and a horse traveling together in the boy’s search for home.'
-                    popularity: 29.827
-                    poster_path: /oQRgyQCzcyZvE6w5heM9ktVY0LT.jpg
-                    release_date: '2022-12-25'
-                    title: 'The Boy, the Mole, the Fox and the Horse'
-                    video: false
-                    vote_average: 8.6
-                    vote_count: 230
-                  - adult: false
-                    backdrop_path: /kGzFbGhp99zva6oZODW5atUtnqi.jpg
-                    genre_ids:
-                      - 18
-                      - 80
-                    id: 240
-                    original_language: en
-                    original_title: The Godfather Part II
-                    overview: 'In the continuing saga of the Corleone crime family, a young Vito Corleone grows up in Sicily and in 1910s New York. In the 1950s, Michael Corleone attempts to expand the family business into Las Vegas, Hollywood and Cuba.'
-                    popularity: 58.505
-                    poster_path: /hek3koDUyRQk7FIhPXsa6mT2Zc3.jpg
-                    release_date: '1974-12-20'
-                    title: The Godfather Part II
-                    video: false
-                    vote_average: 8.6
-                    vote_count: 10600
-            examples:
-              Example 1:
-                value:
-                  - adult: true
-                    backdrop_path: string
-                    genre_ids:
-                      - 0
-                    id: 0
-                    original_language: string
-                    original_title: string
-                    overview: string
-                    popularity: 0
-                    poster_path: string
-                    release_date: string
-                    title: string
-                    video: true
-                    vote_average: 0
-                    vote_count: 0
       description: |-
         As a user, I should be able to view the list of the top 5 series in a
         dedicated section on the movies and series pages
     parameters: []
   /tv/id/detail:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: get serie detail
+      tags:
+        - TV
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -2393,21 +959,21 @@ paths:
                       title: Fight Club
                       overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
                       poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                      vote_average: '8.4'
-                      release_date: '1999-10-15T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:40.000000Z'
-                      updated_at: '2023-02-25T14:28:40.000000Z'
+                      vote_average: "8.4"
+                      release_date: "1999-10-15T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:40.000000Z"
+                      updated_at: "2023-02-25T14:28:40.000000Z"
                     - id: 3
                       media_id: 551
                       user_id: 1
                       popularity: 18.19
                       title: The Poseidon Adventure
-                      overview: 'When their ocean liner capsizes, a group of passengers struggle to survive and escape.'
+                      overview: "When their ocean liner capsizes, a group of passengers struggle to survive and escape."
                       poster_path: /6RGiA5BfhelU9zoD0b1GAG4GWWf.jpg
-                      vote_average: '7.1'
-                      release_date: '1972-12-13T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:47.000000Z'
-                      updated_at: '2023-02-25T14:28:47.000000Z'
+                      vote_average: "7.1"
+                      release_date: "1972-12-13T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:47.000000Z"
+                      updated_at: "2023-02-25T14:28:47.000000Z"
               examples:
                 Example 1:
                   value:
@@ -2423,209 +989,15 @@ paths:
                       created_at: string
                       updated_at: string
       operationId: get-tv-top-rated
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                adult:
-                  type: boolean
-                backdrop_path:
-                  type: string
-                belongs_to_collection:
-                  type: string
-                budget:
-                  type: integer
-                genres:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      name:
-                        type: string
-                homepage:
-                  type: string
-                id:
-                  type: integer
-                imdb_id:
-                  type: string
-                original_language:
-                  type: string
-                original_title:
-                  type: string
-                overview:
-                  type: string
-                popularity:
-                  type: number
-                poster_path:
-                  type: string
-                production_companies:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      logo_path:
-                        type: string
-                      name:
-                        type: string
-                      origin_country:
-                        type: string
-                production_countries:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      iso_3166_1:
-                        type: string
-                      name:
-                        type: string
-                release_date:
-                  type: string
-                revenue:
-                  type: integer
-                runtime:
-                  type: integer
-                spoken_languages:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      english_name:
-                        type: string
-                      iso_639_1:
-                        type: string
-                      name:
-                        type: string
-                status:
-                  type: string
-                tagline:
-                  type: string
-                title:
-                  type: string
-                video:
-                  type: boolean
-                vote_average:
-                  type: number
-                vote_count:
-                  type: integer
-              x-examples:
-                Example 1:
-                  adult: false
-                  backdrop_path: /hZkgoQYus5vegHoetLkCJzb17zJ.jpg
-                  belongs_to_collection: null
-                  budget: 63000000
-                  genres:
-                    - id: 18
-                      name: Drama
-                    - id: 53
-                      name: Thriller
-                    - id: 35
-                      name: Comedy
-                  homepage: 'http://www.foxmovies.com/movies/fight-club'
-                  id: 550
-                  imdb_id: tt0137523
-                  original_language: en
-                  original_title: Fight Club
-                  overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
-                  popularity: 69.328
-                  poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                  production_companies:
-                    - id: 25
-                      logo_path: /qZCc1lty5FzX30aOCVRBLzaVmcp.png
-                      name: 20th Century Fox
-                      origin_country: US
-                    - id: 508
-                      logo_path: /7cxRWzi4LsVm4Utfpr1hfARNurT.png
-                      name: Regency Enterprises
-                      origin_country: US
-                    - id: 711
-                      logo_path: /tEiIH5QesdheJmDAqQwvtN60727.png
-                      name: Fox 2000 Pictures
-                      origin_country: US
-                    - id: 4700
-                      logo_path: /A32wmjrs9Psf4zw0uaixF0GXfxq.png
-                      name: The Linson Company
-                      origin_country: US
-                    - id: 20555
-                      logo_path: /hD8yEGUBlHOcfHYbujp71vD8gZp.png
-                      name: Taurus Film
-                      origin_country: DE
-                    - id: 54051
-                      logo_path: null
-                      name: Atman Entertainment
-                      origin_country: ''
-                    - id: 54052
-                      logo_path: null
-                      name: Knickerbocker Films
-                      origin_country: US
-                  production_countries:
-                    - iso_3166_1: US
-                      name: United States of America
-                  release_date: '1999-10-15'
-                  revenue: 100853753
-                  runtime: 139
-                  spoken_languages:
-                    - english_name: English
-                      iso_639_1: en
-                      name: English
-                  status: Released
-                  tagline: Mischief. Mayhem. Soap.
-                  title: Fight Club
-                  video: false
-                  vote_average: 8.4
-                  vote_count: 25876
-            examples:
-              Example 1:
-                value:
-                  adult: true
-                  backdrop_path: string
-                  belongs_to_collection: string
-                  budget: 0
-                  genres:
-                    - id: 0
-                      name: string
-                  homepage: string
-                  id: 0
-                  imdb_id: string
-                  original_language: string
-                  original_title: string
-                  overview: string
-                  popularity: 0
-                  poster_path: string
-                  production_companies:
-                    - id: 0
-                      logo_path: string
-                      name: string
-                      origin_country: string
-                  production_countries:
-                    - iso_3166_1: string
-                      name: string
-                  release_date: string
-                  revenue: 0
-                  runtime: 0
-                  spoken_languages:
-                    - english_name: string
-                      iso_639_1: string
-                      name: string
-                  status: string
-                  tagline: string
-                  title: string
-                  video: true
-                  vote_average: 0
-                  vote_count: 0
-      description: 'As a user, I should be able to view the details of a series'
+      description: "As a user, I should be able to view the details of a series"
     parameters: []
   /tv/id/video:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: get tv videos
+      tags:
+        - TV
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -2665,23 +1037,23 @@ paths:
                     results:
                       - iso_639_1: en
                         iso_3166_1: US
-                        name: 'Fight Club (1999) Trailer - Starring Brad Pitt, Edward Norton, Helena Bonham Carter'
+                        name: "Fight Club (1999) Trailer - Starring Brad Pitt, Edward Norton, Helena Bonham Carter"
                         key: O-b2VfmmbyA
                         site: YouTube
                         size: 720
                         type: Trailer
                         official: false
-                        published_at: '2016-03-05T02:03:14.000Z'
+                        published_at: "2016-03-05T02:03:14.000Z"
                         id: 639d5326be6d88007f170f44
                       - iso_639_1: en
                         iso_3166_1: US
-                        name: '#TBT Trailer'
+                        name: "#TBT Trailer"
                         key: BdJKm16Co6M
                         site: YouTube
                         size: 1080
                         type: Trailer
                         official: true
-                        published_at: '2014-10-02T19:20:22.000Z'
+                        published_at: "2014-10-02T19:20:22.000Z"
                         id: 5c9294240e0a267cd516835f
               examples:
                 Example 1:
@@ -2699,14 +1071,15 @@ paths:
                         published_at: string
                         id: string
       operationId: get-tv-id-videos
-      description: 'As a user, I should be able to watch the trailer of a serie'
+      description: "As a user, I should be able to watch the trailer of a serie"
     parameters: []
   /tv/search:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: search tv
+      tags:
+        - TV
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -2746,21 +1119,21 @@ paths:
                       title: Fight Club
                       overview: 'A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground "fight clubs" forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion.'
                       poster_path: /pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-                      vote_average: '8.4'
-                      release_date: '1999-10-15T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:40.000000Z'
-                      updated_at: '2023-02-25T14:28:40.000000Z'
+                      vote_average: "8.4"
+                      release_date: "1999-10-15T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:40.000000Z"
+                      updated_at: "2023-02-25T14:28:40.000000Z"
                     - id: 3
                       media_id: 551
                       user_id: 1
                       popularity: 18.19
                       title: The Poseidon Adventure
-                      overview: 'When their ocean liner capsizes, a group of passengers struggle to survive and escape.'
+                      overview: "When their ocean liner capsizes, a group of passengers struggle to survive and escape."
                       poster_path: /6RGiA5BfhelU9zoD0b1GAG4GWWf.jpg
-                      vote_average: '7.1'
-                      release_date: '1972-12-13T00:00:00.000000Z'
-                      created_at: '2023-02-25T14:28:47.000000Z'
-                      updated_at: '2023-02-25T14:28:47.000000Z'
+                      vote_average: "7.1"
+                      release_date: "1972-12-13T00:00:00.000000Z"
+                      created_at: "2023-02-25T14:28:47.000000Z"
+                      updated_at: "2023-02-25T14:28:47.000000Z"
               examples:
                 Example 1:
                   value:
@@ -2776,400 +1149,5 @@ paths:
                       created_at: string
                       updated_at: string
       operationId: get-tv-search
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                page:
-                  type: integer
-                results:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      adult:
-                        type: boolean
-                      backdrop_path:
-                        type: string
-                      genre_ids:
-                        type: array
-                        items:
-                          type: integer
-                      id:
-                        type: integer
-                      original_language:
-                        type: string
-                      original_title:
-                        type: string
-                      overview:
-                        type: string
-                      popularity:
-                        type: number
-                      poster_path:
-                        type: string
-                      release_date:
-                        type: string
-                      title:
-                        type: string
-                      video:
-                        type: boolean
-                      vote_average:
-                        type: number
-                      vote_count:
-                        type: integer
-                total_pages:
-                  type: integer
-                total_results:
-                  type: integer
-              x-examples:
-                Example 1:
-                  page: 1
-                  results:
-                    - adult: false
-                      backdrop_path: /edOt2jNyCbb8SQSvulD2sRRJhmA.jpg
-                      genre_ids:
-                        - 28
-                        - 80
-                        - 53
-                      id: 873126
-                      original_language: it
-                      original_title: Il mio nome è vendetta
-                      overview: 'After old enemies kill his family, a former mafia enforcer and his feisty daughter flee to Milan, where they hide out while plotting their revenge.'
-                      popularity: 324.682
-                      poster_path: /7l3war94J4tRyWUiLAGokr3ViF2.jpg
-                      release_date: '2022-11-30'
-                      title: My Name Is Vendetta
-                      video: false
-                      vote_average: 6.9
-                      vote_count: 395
-                    - adult: false
-                      backdrop_path: /dIWwZW7dJJtqC6CgWzYkNVKIUm8.jpg
-                      genre_ids:
-                        - 10749
-                        - 16
-                        - 18
-                      id: 372058
-                      original_language: ja
-                      original_title: 君の名は。
-                      overview: 'High schoolers Mitsuha and Taki are complete strangers living separate lives. But one night, they suddenly switch places. Mitsuha wakes up in Taki’s body, and he in hers. This bizarre occurrence continues to happen randomly, and the two must adjust their lives around each other.'
-                      popularity: 98.025
-                      poster_path: /q719jXXEzOoYaps6babgKnONONX.jpg
-                      release_date: '2016-08-26'
-                      title: Your Name.
-                      video: false
-                      vote_average: 8.521
-                      vote_count: 9538
-                    - adult: false
-                      backdrop_path: /1U5zz2Jvt2L7hXHf1ZN1n74Zx8j.jpg
-                      genre_ids:
-                        - 18
-                        - 53
-                      id: 769636
-                      original_language: es
-                      original_title: Código Emperador
-                      overview: 'Juan, a secret service agent, approaches Wendy, a young Filipina who works as a maid for a suspicious couple.'
-                      popularity: 51.23
-                      poster_path: /8VjVLMiPm598Kg6XmKk5m1fz0p7.jpg
-                      release_date: '2022-03-18'
-                      title: 'Code Name: Emperor'
-                      video: false
-                      vote_average: 5.9
-                      vote_count: 127
-                    - adult: false
-                      backdrop_path: /oD9aIL2vuEB0I811qyjRtM0m1Fa.jpg
-                      genre_ids:
-                        - 14
-                        - 53
-                        - 9648
-                      id: 16140
-                      original_language: ja
-                      original_title: デスノート the Last name
-                      overview: 'In the second installment of the Death Note film franchise, Light Yagami meets a second Kira and faithful follower Misa Amane and her Shinigami named Rem. Light attempts to defeat L along with Teru Mikami (a Kira follower) and Kiyomi Takada (another Kira follower) but in the end will Light win? or will a Shinigami named Ryuk make all the difference in Light''s victory or his ultimate death?'
-                      popularity: 16.316
-                      poster_path: /wd0Ri3v8tyRdWuA5PRS2rODOlIa.jpg
-                      release_date: '2006-10-28'
-                      title: 'Death Note: The Last Name'
-                      video: false
-                      vote_average: 6.958
-                      vote_count: 392
-                    - adult: false
-                      backdrop_path: /dl4CGoRgzTMNXcVX56zc13RfNJm.jpg
-                      genre_ids:
-                        - 28
-                        - 16
-                        - 14
-                      id: 843243
-                      original_language: ja
-                      original_title: 劇場版 Fate/kaleid liner プリズマ☆イリヤ Licht 名前の無い少女
-                      overview: 'The Ainsworth family''s goal is to save the world from evil, but their success depends on the great sacrifice Magical Girl Miyu makes for them. Her brother Shirou, however, is not willing to let the family have his sister without a fight. That’s why he doggedly searches for a way to save not only the world but also Miyu...'
-                      popularity: 41.376
-                      poster_path: /1HLRRAvUgUNweE5wscnB2kcZnXh.jpg
-                      release_date: '2021-08-27'
-                      title: 'Fate/kaleid liner Prisma☆Illya: Licht Nameless Girl'
-                      video: false
-                      vote_average: 5.5
-                      vote_count: 2
-                    - adult: false
-                      backdrop_path: /occ3EfIpSilyGVh7B45IFwclgqz.jpg
-                      genre_ids:
-                        - 18
-                      id: 1006817
-                      original_language: de
-                      original_title: Knochen und Namen
-                      overview: 'Boris and Jonathan have been a couple for many years. But their relationship has reached a point where they might as well spend their evenings together separately: One lies in bed reading, the other works at a desk in the next room. While actor Boris digs deeper into rehearsals for a new film with an ambitious director and begins to mix real and fictional characters, Jonathan tries to redefine his voice as a writer. Ghosting through these days of wrestling with distance, closeness, trust, desire and fear of loss is Jonathans'' young niece Josie, who is trying to deal with the approaching end of her childhood in her own idiosyncratic way. BONES AND NAMES, the feature debut of Fabian Stumm, portrays people searching for their place in life in different ways. A sensitive and humorous reflection on the dissonances in relationships that both connect and distance us from each other.'
-                      popularity: 11.168
-                      poster_path: /dqnisgxxVUxE3zLbUKhMOyCNoQp.jpg
-                      release_date: '2023-02-22'
-                      title: Bones and Names
-                      video: false
-                      vote_average: 0
-                      vote_count: 0
-                    - adult: false
-                      backdrop_path: /q48zEA8ytzon2YBubTHjZFOypBy.jpg
-                      genre_ids:
-                        - 16
-                        - 28
-                        - 14
-                      id: 550093
-                      original_language: ja
-                      original_title: K Seven Stories Circle Vision ~Nameless Song~
-                      overview: ''
-                      popularity: 10.258
-                      poster_path: /lCrvNRsym0JprlkLwXinmgxD7bt.jpg
-                      release_date: '2018-12-01'
-                      title: 'K: Seven Stories Movie 6 - Circle Vision - Nameless Song'
-                      video: false
-                      vote_average: 6.5
-                      vote_count: 2
-                    - adult: false
-                      backdrop_path: /4AuJa4AoebEYC49BTJ1bwZv0Ey9.jpg
-                      genre_ids:
-                        - 10751
-                        - 10749
-                      id: 583833
-                      original_language: ru
-                      original_title: Пальма
-                      overview: 'The film is inspired by an incredible story of a shepherd dog named Palm who was inadvertently left in the airport by her owner. She befriends nine-year old Nicholas whose mother dies leaving him with a father he barely knows - a pilot who finds the dog at the airport. It''s a story of amazing adventures, true friendship and unconditional love.'
-                      popularity: 25.014
-                      poster_path: /3S3Mz9OD5SUwKy7kaqXcWAKUGXY.jpg
-                      release_date: '2021-03-18'
-                      title: A Dog Named Palma
-                      video: false
-                      vote_average: 8.3
-                      vote_count: 147
-                    - adult: false
-                      backdrop_path: /ttkibtcAjoilW1PbTIFy9U9YOdB.jpg
-                      genre_ids:
-                        - 53
-                        - 28
-                      id: 916719
-                      original_language: en
-                      original_title: Code Name Banshee
-                      overview: 'Caleb, a former government assassin in hiding, who resurfaces when his protégé, the equally deadly killer known as Banshee, discovers a bounty has been placed on Caleb''s head.'
-                      popularity: 99.108
-                      poster_path: /lxkvlIrvExeHGiPk7bdji2xm3vs.jpg
-                      release_date: '2022-07-01'
-                      title: Code Name Banshee
-                      video: false
-                      vote_average: 5.2
-                      vote_count: 58
-                    - adult: false
-                      backdrop_path: /jSpfsZtEU1PP3zPrXRBMmya4a4K.jpg
-                      genre_ids:
-                        - 35
-                        - 37
-                      id: 11829
-                      original_language: it
-                      original_title: ...continuavano a chiamarlo Trinità
-                      overview: The two brothers Trinity and Bambino are exchanged by two federal agents and take advantage of the situation to steal a huge booty hidden in a monastery by a gang of outlaws.
-                      popularity: 20.729
-                      poster_path: /oRd5Zb2MJEvBBxvyh3gVe6d4cAl.jpg
-                      release_date: '1971-10-21'
-                      title: Trinity Is Still My Name
-                      video: false
-                      vote_average: 7.4
-                      vote_count: 769
-                    - adult: false
-                      backdrop_path: /7d1yr20hQI3opmk9410o3111WNl.jpg
-                      genre_ids:
-                        - 35
-                        - 37
-                      id: 9474
-                      original_language: it
-                      original_title: Il mio nome è Nessuno
-                      overview: 'Jack Beauregard, an ageing gunman of the Old West, only wants to retire in peace and move to Europe. But a young gunfighter, known as "Nobody", who idolizes Beauregard, wants him to go out in a blaze of glory. So he arranges for Jack to face the 150-man gang known as The Wild Bunch and earn his place in history.'
-                      popularity: 18.398
-                      poster_path: /tJQEVI1p00Jh9TUgNEI623iu7ST.jpg
-                      release_date: '1973-12-13'
-                      title: My Name Is Nobody
-                      video: false
-                      vote_average: 7.3
-                      vote_count: 796
-                    - adult: false
-                      backdrop_path: /gM1WB9sbqTdBri5XYtxPz0ectr.jpg
-                      genre_ids:
-                        - 10749
-                        - 36
-                        - 18
-                      id: 719410
-                      original_language: zh
-                      original_title: 刻在你心底的名字
-                      overview: 'In 1987, as martial law ends in Taiwan, Jia-han and Birdy fall in love amid family pressure, homophobia and social stigma.'
-                      popularity: 14.381
-                      poster_path: /m3y8B4beaYjGltS7G2zltURfaUD.jpg
-                      release_date: '2020-09-30'
-                      title: Your Name Engraved Herein
-                      video: false
-                      vote_average: 8.018
-                      vote_count: 171
-                    - adult: false
-                      backdrop_path: /qRwSY7MQcMY099gwtCaBMTqvNlQ.jpg
-                      genre_ids:
-                        - 18
-                        - 99
-                      id: 1081021
-                      original_language: en
-                      original_title: Come Out in Jesus Name
-                      overview: 'Following a startling chain of events, the most controversial pastor in America, Greg Locke, took a 180-degree turn from his mainstream religious traditions and led his church to the brink of revival. He and a diverse group of unconventional preachers then began to spark the most important awakening in the history of the Christian Church — through the most unlikely means – by casting out demons. This fiery film documents the beginnings of their journey. “Come Out In Jesus Name” will be followed by a live simulcast event where Pastor Locke and his fellow demon slayers will lead a supernatural mass deliverance... in Jesus name.'
-                      popularity: 6.997
-                      poster_path: /6477EtUdjnPt48CTWF6P6MDTYRX.jpg
-                      release_date: '2023-03-13'
-                      title: Come Out in Jesus Name
-                      video: false
-                      vote_average: 0
-                      vote_count: 0
-                    - adult: false
-                      backdrop_path: /zvOJawrnmgK0sL293mOXOdLvTXQ.jpg
-                      genre_ids:
-                        - 10749
-                        - 18
-                      id: 398818
-                      original_language: en
-                      original_title: Call Me by Your Name
-                      overview: 'In 1980s Italy, a relationship begins between seventeen-year-old teenage Elio and the older adult man hired as his father''s research assistant.'
-                      popularity: 56.661
-                      poster_path: /mZ4gBdfkhP9tvLH1DO4m4HYtiyi.jpg
-                      release_date: '2017-09-01'
-                      title: Call Me by Your Name
-                      video: false
-                      vote_average: 8.2
-                      vote_count: 10941
-                    - adult: false
-                      backdrop_path: /ibk7vtPsirbk0wIJEmHLF0vwcyi.jpg
-                      genre_ids:
-                        - 80
-                        - 53
-                      id: 89501
-                      original_language: ko
-                      original_title: 범죄와의 전쟁
-                      overview: A corrupt customs official joins forces with a vicious gangster to form the most powerful crime partnership in Busan.
-                      popularity: 10.884
-                      poster_path: /3ppxP6yFoKxkA3jQkDdv3E9u1tc.jpg
-                      release_date: '2012-02-02'
-                      title: Nameless Gangster
-                      video: false
-                      vote_average: 6.9
-                      vote_count: 139
-                    - adult: false
-                      backdrop_path: /rSWv4coph16vM5yOaOFXE1Y6qgY.jpg
-                      genre_ids:
-                        - 18
-                        - 80
-                      id: 381262
-                      original_language: fr
-                      original_title: Au nom de ma fille
-                      overview: "In 1982, André Bamberski learns about the death of his 14 year-old daughter, Kalinka, while she was on vacation with her mother and stepfather in Germany. Convinced that Kalinka’s death was not an accident, Bamberski begins to investigate. A botched autopsy report raises his suspicions and leads him to accuse Kalinka’s stepfather, Dr Dieter Krombach, as the murderer.\r Unable to indict Krombach in Germany, Bamberski attempts to take the trial to France, where he will dedicate his life to Kalinka’s justice and the imprisonment of Krombach."
-                      popularity: 7.654
-                      poster_path: /lVYfYQBBvs6yb7pChIBJ6R4vsrK.jpg
-                      release_date: '2016-03-16'
-                      title: In Her Name
-                      video: false
-                      vote_average: 6.7
-                      vote_count: 273
-                    - adult: false
-                      backdrop_path: /77ts1WFashRqO6oLShWgxIKWt7y.jpg
-                      genre_ids:
-                        - 35
-                        - 18
-                      id: 112198
-                      original_language: fr
-                      original_title: Le Prénom
-                      overview: 'Vincent, a wealthy real estate agent, is invited to dinner by his sister Elizabeth and her husband Peter, both professors in Paris. Claude, a childhood friend and trombonist in a symphony orchestra, is also present. Vincent brings news from the prenatal examination of his and his wife Anna''s unborn son. The name chosen by the soon-to-be parents strongly offends the others for many reasons. The dispute between the guests quickly escalates and before long the resurgence of old grudges and hidden secrets is unavoidable ...'
-                      popularity: 10.223
-                      poster_path: /jMN3qpIDQWYUthezDzYacr99hXo.jpg
-                      release_date: '2012-04-25'
-                      title: What's in a Name
-                      video: false
-                      vote_average: 7.309
-                      vote_count: 1464
-                    - adult: false
-                      backdrop_path: /eMCLDT7IIwJZmKAB3bxFeeROlZM.jpg
-                      genre_ids:
-                        - 35
-                        - 80
-                        - 18
-                        - 10749
-                        - 10402
-                      id: 32689
-                      original_language: fr
-                      original_title: Prénom Carmen
-                      overview: 'The protagonist is Carmen X, a female member of a terrorist gang. She asks her uncle Jean, a washed-up film director if she can borrow his beachside house to make a film with some friends, but they are in fact planning to rob a bank. During the robbery she falls in love with a security guard. The film intercuts between Carmen''s escape with the guard, her uncle''s attempt to make a comeback film, and a string quartet attempting to perform Beethoven.'
-                      popularity: 7.185
-                      poster_path: /natncsjLzxamty1biZSbuZjsXh4.jpg
-                      release_date: '1983-09-04'
-                      title: 'First Name: Carmen'
-                      video: false
-                      vote_average: 6.2
-                      vote_count: 73
-                    - adult: false
-                      backdrop_path: /yBLUED5DS8bJSnVcp50oXvy97xi.jpg
-                      genre_ids:
-                        - 35
-                      id: 999594
-                      original_language: ru
-                      original_title: Непослушник 2
-                      overview: The second part of a comedy about a blogger who has to hide within the walls of a monastery from punishment on charges of insulting the feelings of believers.
-                      popularity: 6.021
-                      poster_path: /59kJKOUXwHph2vQ4DuaW8fDeBXM.jpg
-                      release_date: '2022-12-15'
-                      title: In the Name of a Prank 2
-                      video: false
-                      vote_average: 8
-                      vote_count: 2
-                    - adult: false
-                      backdrop_path: null
-                      genre_ids:
-                        - 18
-                        - 53
-                      id: 435983
-                      original_language: en
-                      original_title: She Has A Name
-                      overview: 'Jason, an American lawyer, poses as a john to build a legal case against a pimp trafficking girls to Bangkok. Can he win the trust of a young prostitute known only as Number 18 and convince her to risk her life to testify against her pimp?'
-                      popularity: 1.741
-                      poster_path: /ktk8kNuc9ftAEfZZ96HEVFziy21.jpg
-                      release_date: '2016-12-02'
-                      title: She Has a Name
-                      video: false
-                      vote_average: 10
-                      vote_count: 1
-                  total_pages: 63
-                  total_results: 1247
-            examples:
-              Example 1:
-                value:
-                  id: 0
-                  results:
-                    - iso_639_1: string
-                      iso_3166_1: string
-                      name: string
-                      key: string
-                      site: string
-                      size: 0
-                      type: string
-                      official: true
-                      published_at: string
-                      id: 1
-      description: 'As a user, I should be able to search for series'
+      description: "As a user, I should be able to search for series"
     parameters: []
