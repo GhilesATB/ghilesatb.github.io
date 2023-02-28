@@ -51,7 +51,6 @@ class AccountService implements AccountServiceInterface
     public function getFavorites(): Collection
     {
         try {
-            dd('ff');
             $favorites = Auth::user()->favorites;
 
             return $favorites;

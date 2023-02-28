@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Exceptions;
+
 use Exception;
+use Illuminate\Http\JsonResponse;
 
 class BaseException extends Exception
 {
@@ -11,5 +13,16 @@ class BaseException extends Exception
     {
         $message = !empty($message) ? static::MSG_PREFIX . ": {$message}" : static::MSG_PREFIX;
         parent::__construct($message, $code, $e);
+    }
+
+    /**
+     * @param $request
+     */
+    public function render(): JsonResponse
+    {
+        return new JsonResponse([
+            'code' => $this->getCode(),
+            'message' => $this->getMessage(),
+        ], $this->getCode());
     }
 }

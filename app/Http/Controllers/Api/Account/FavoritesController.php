@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\Account;
+
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FavoriteResource;
 use App\Services\AccountService\AccountService;
@@ -20,10 +21,10 @@ class FavoritesController extends Controller
     public function store(string $media_id, AccountService $accountService): JsonResource
     {
         $favorite = $accountService->getMedia(
-                request()->input('media_type'),
-                [request()->input('media_type') => $media_id],
-                request()->query->all(),
-            );
+            request()->input('media_type'),
+            $media_id,
+            request()->query->all(),
+        );
 
         return FavoriteResource::make($favorite);
     }
