@@ -2,10 +2,12 @@
 
 namespace App\Services\AccountService;
 
+use App\Exceptions\UnAuthenticatedUserException;
 use App\Models\Favorite;
 use App\Services\MediaService\MediaServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Exception;
 
 class AccountService implements AccountServiceInterface
 {
@@ -22,7 +24,9 @@ class AccountService implements AccountServiceInterface
 
         if (blank($favorite)) {
             $data = $this->mediaService->detail(
-                $mediaType, $id, $params
+                $mediaType,
+                $id,
+                $params
             );
 
             $favoriteData = [
@@ -46,16 +50,23 @@ class AccountService implements AccountServiceInterface
      * */
     public function getFavorites(): Collection
     {
-        $favorites = Auth::user()->favorites;
+        try {
+            $favorites = Auth::user()->favorites;
 
-        return $favorites;
+            return $favorites;
+        } catch(Exception $exception) {
+            throw new UnAuthenticatedUserException($exception->getCode(), $exception->getMessage(), $exception);
+        }
     }
 
     public function removeFavorite(string $favorite_id): void
     {
-        $favorite = Auth::user()->favorites()->where('id', $favorite_id)->firstOrFail();
+        try {
+            $favorite = Auth::user()->favorites()->where('id', $favorite_id)->firstOrFail();
 
-        $favorite->delete();
+            $favorite->delete();
+        } catch(Exception $exception) {
+            throw new UnAuthenticatedUserException($exception->getCode(), $exception->getMessage(), $exception);
+        }
     }
 }
-

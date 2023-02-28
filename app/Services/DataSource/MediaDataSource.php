@@ -25,8 +25,8 @@ class MediaDataSource implements ExternalApiDataSourceInterface
             $data = json_decode($response->body());
 
             return $data;
-        } catch (Exception $e) {
-            throw new DataSourceException($e->getMessage(), $e->getCode(), $e);
+        } catch (Exception $exception) {
+            throw new DataSourceException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 }
