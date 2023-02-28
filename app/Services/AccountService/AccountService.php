@@ -55,7 +55,7 @@ class AccountService implements AccountServiceInterface
 
             return $favorites;
         } catch(Exception $exception) {
-            throw new UnAuthenticatedUserException($exception->getCode(), $exception->getMessage(), $exception);
+            throw new UnAuthenticatedUserException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
@@ -66,7 +66,7 @@ class AccountService implements AccountServiceInterface
 
             $favorite->delete();
         } catch(Exception $exception) {
-            throw new UnAuthenticatedUserException($exception->getCode(), $exception->getMessage(), $exception);
+            throw new UnAuthenticatedUserException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 }

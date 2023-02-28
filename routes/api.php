@@ -42,16 +42,16 @@ Route::prefix('/tv')->group(function () {
     Route::get('/search', [SeriesController::class, 'search']);
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+//Route::middleware('auth:sanctum')->group(function () {
+/*
+ * account routes
+ */
+Route::prefix('/account')->group(function () {
     /*
-     * account routes
+     * favorites routes
      */
-    Route::prefix('/account')->group(function () {
-        /*
-         * favorites routes
-         */
-        Route::get('/favorites', [FavoritesController::class, 'index']);
-        Route::post('/mark-as-favorite/{favorite_id}', [FavoritesController::class, 'store']);
-        Route::delete('/delete-favorite/{favorite_id}', [FavoritesController::class, 'destroy']);
-    });
+    Route::get('/favorites', [FavoritesController::class, 'index']);
+    Route::post('/mark-as-favorite/{favorite_id}', [FavoritesController::class, 'store']);
+    Route::delete('/delete-favorite/{favorite_id}', [FavoritesController::class, 'destroy']);
 });
+//});

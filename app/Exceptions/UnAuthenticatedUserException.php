@@ -4,5 +4,5 @@ namespace App\Exceptions;
 
 class UnAuthenticatedUserException extends BaseException
 {
-    public const MSG_PREFIX = "UnAuthenticated user ";
+    public const MSG_PREFIX = "Un authenticated user ";
 }
