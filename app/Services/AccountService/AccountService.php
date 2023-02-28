@@ -2,7 +2,7 @@
 
 namespace App\Services\AccountService;
 
-use App\Exceptions\UnAuthenticatedUserException;
+use App\Exceptions\NoAuthenticatedUserException;
 use App\Models\Favorite;
 use App\Services\MediaService\MediaServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
@@ -51,11 +51,12 @@ class AccountService implements AccountServiceInterface
     public function getFavorites(): Collection
     {
         try {
+            dd('ff');
             $favorites = Auth::user()->favorites;
 
             return $favorites;
         } catch(Exception $exception) {
-            throw new UnAuthenticatedUserException($exception->getMessage(), $exception->getCode(), $exception);
+            throw new NoAuthenticatedUserException($exception->getMessage(), 401, $exception);
         }
     }
 
@@ -66,7 +67,7 @@ class AccountService implements AccountServiceInterface
 
             $favorite->delete();
         } catch(Exception $exception) {
-            throw new UnAuthenticatedUserException($exception->getMessage(), $exception->getCode(), $exception);
+            throw new NoAuthenticatedUserException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 }
