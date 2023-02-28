@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Api\Medias;
 
 use App\Http\Controllers\Controller;
 use App\Services\MediaService\MediaServiceInterface;
-use App\Services\MediaService\TMDBService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class MoviesController extends Controller
 {
-    const MEDIA = 'movie';
+    public const MEDIA = 'movie';
 
     public function index(MediaServiceInterface $mediaService): JsonResponse
     {
