@@ -52,21 +52,21 @@ class AccountService implements AccountServiceInterface
     {
         try {
             $favorites = Auth::user()->favorites;
-
-            return $favorites;
         } catch(Exception $exception) {
             throw new NoAuthenticatedUserException($exception->getMessage(), 401, $exception);
         }
+
+        return $favorites;
     }
 
     public function removeFavorite(string $favorite_id): void
     {
         try {
             $favorite = Auth::user()->favorites()->where('id', $favorite_id)->firstOrFail();
-
-            $favorite->delete();
         } catch(Exception $exception) {
             throw new NoAuthenticatedUserException($exception->getMessage(), $exception->getCode(), $exception);
         }
+
+        $favorite->delete();
     }
 }
